@@ -2,12 +2,12 @@ package com.unai.app.redis.model;
 
 import com.unai.app.redis.exception.KeyValueNotFoundException;
 
-public class StringResponse {
+public class KeyValueResponse {
 	
 	private String key;
 	private String value;
 	
-	public StringResponse(String key, String value) throws KeyValueNotFoundException {
+	public KeyValueResponse(String key, String value) throws KeyValueNotFoundException {
 		this.key = key;
 		if (value == null) {
 			throw new KeyValueNotFoundException(key);

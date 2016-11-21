@@ -1,6 +1,5 @@
 package com.unai.app.springredis.rest;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unai.app.redis.exception.KeyValueNotFoundException;
 import com.unai.app.redis.exception.ListEmptyException;
+import com.unai.app.redis.model.KeyValueResponse;
 import com.unai.app.redis.model.ListResponse;
-import com.unai.app.redis.model.StringResponse;
 import com.unai.app.springredis.service.ListRepository;
+import com.unai.app.utils.HTTPHeaders;
 
 @RestController
 @RequestMapping("/sredis")
@@ -38,8 +38,7 @@ public class SpringRedisListController {
 			Long created = listRepository.lpush(key, values);
 			HashMap<String, Long> response = new HashMap<>();
 			response.put("created", created);
-			HttpHeaders h = new HttpHeaders();
-			h.setLocation(URI.create(String.format("/sredis/lindex/%s/all", key)));
+			HttpHeaders h = new HTTPHeaders().location(String.format("/sredis/lindex/%s/all", key));
 			return new ResponseEntity<HashMap<String, Long>>(response, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -51,7 +50,7 @@ public class SpringRedisListController {
 	public ResponseEntity<?> lindex(@PathVariable("key") String key, @PathVariable("index") Long index) {
 		try {
 			String result = listRepository.lindex(key, index).toString();
-			StringResponse sr = new StringResponse(String.format("%s[%d]", key, index), result);
+			KeyValueResponse sr = new KeyValueResponse(String.format("%s[%d]", key, index), result);
 			return ResponseEntity.ok(sr);
 		} catch (NullPointerException|KeyValueNotFoundException e) {
 			log.error(e.getMessage());

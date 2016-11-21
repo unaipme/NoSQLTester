@@ -1,7 +1,7 @@
 package com.unai.app.redis;
 
 import com.unai.app.redis.model.HashResponse;
-import com.unai.app.redis.model.StringResponse;
+import com.unai.app.redis.model.KeyValueResponse;
 
 import redis.clients.jedis.Jedis;
 
@@ -11,7 +11,7 @@ public class JedisDriver extends Jedis {
 		super(host, port);
 	}
 	
-	public String set(StringResponse s) {
+	public String set(KeyValueResponse s) {
 		return super.set(s.getKey(), s.getValue());
 	}
 	
@@ -19,7 +19,7 @@ public class JedisDriver extends Jedis {
 		return super.hmset(hr.getKey(), hr);
 	}
 	
-	public Long hset(String key, StringResponse s) {
+	public Long hset(String key, KeyValueResponse s) {
 		return super.hset(key, s.getKey(), s.getValue());
 	}
 	

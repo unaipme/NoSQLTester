@@ -1,6 +1,5 @@
 package com.unai.app.springredis.rest;
 
-import java.net.URI;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unai.app.redis.exception.SetEmptyException;
 import com.unai.app.redis.model.SetResponse;
 import com.unai.app.springredis.service.SetRepository;
+import com.unai.app.utils.HTTPHeaders;
 
 
 
@@ -37,8 +37,7 @@ public class SpringRedisSetController {
 			Long created = setRepository.sadd(key, (Object []) members);
 			HashMap<String, Long> response = new HashMap<>();
 			response.put("created", created);
-			HttpHeaders h = new HttpHeaders();
-			h.setLocation(URI.create(String.format("/smembers/%s", key)));
+			HttpHeaders h = new HTTPHeaders().location(String.format("/smembers/%s", key));
 			return new ResponseEntity<HashMap<String, Long>>(response, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

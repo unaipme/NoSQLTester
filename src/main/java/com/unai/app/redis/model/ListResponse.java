@@ -39,7 +39,7 @@ public class ListResponse {
 	}
 	
 	private void cast(List<? extends Object> list) {
-		this.values = new ArrayList<>();
+		this.values = new ArrayList<String>();
 		for (Object o : list) {
 			values.add(o.toString());
 		}

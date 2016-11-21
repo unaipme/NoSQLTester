@@ -1,5 +1,6 @@
 package com.unai.app.redis.rest;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -17,17 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unai.app.redis.JedisDriver;
-import com.unai.app.redis.exception.HashSetEmptyException;
-import com.unai.app.redis.exception.KeyValueNotFoundException;
-import com.unai.app.redis.model.HashResponse;
-import com.unai.app.redis.model.KeyValueResponse;
+import com.unai.app.redis.exception.SetEmptyException;
+import com.unai.app.redis.model.SetResponse;
 import com.unai.app.utils.HTTPHeaders;
 
 import redis.clients.jedis.exceptions.JedisDataException;
 
+
 @RestController
 @RequestMapping("/redis")
-public class RedisHashController {
+public class RedisSortedSetController {
 	
 	@Value("${redis.server.ip}")
 	private String redisIP;
@@ -35,67 +35,21 @@ public class RedisHashController {
 	@Value("${redis.server.port}")
 	private int port;
 	
-	private Logger log = LoggerFactory.getLogger(RedisHashController.class);
+	private Logger log = LoggerFactory.getLogger(RedisSortedSetController.class);
 	
-	@PostMapping(value="/hmset/{key}", consumes={"application/json"})
-	public ResponseEntity<?> hmset(@PathVariable String key, @RequestBody Map<String, String> hashset) {
+	@GetMapping("/zrange/{key}/all")
+	public ResponseEntity<?> zrangeall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
 			jedis = new JedisDriver(redisIP, port);
-			HashResponse hr = new HashResponse(key, hashset);
-			jedis.hmset(hr);
-			jedis.close();
-			HttpHeaders headers = new HTTPHeaders().location(String.format("/redis/hmget/%s", hr.getKey()));
-			return new ResponseEntity<HashResponse>(hr, headers, HttpStatus.CREATED);
+			SetResponse sr = new SetResponse(key, jedis.zrange(key, 0, -1));
+			return new ResponseEntity<SetResponse>(sr, HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} finally {
-			if (jedis != null) {
-				jedis.close();
-			}
-		}
-	}
-	
-	@PostMapping("/hset/{key}/{field}/{value}")
-	public ResponseEntity<?> hset(@PathVariable("key") String key, @PathVariable("field") String field, @PathVariable String value) {
-		JedisDriver jedis = null;
-		try {
-			jedis = new JedisDriver(redisIP, port);
-			KeyValueResponse sr = new KeyValueResponse(field, value);
-			jedis.hset(key, sr);
-			jedis.close();
-			HttpHeaders headers = new HTTPHeaders().location(String.format("/redis/hget/%s/%s", key, sr.getKey()));
-			return new ResponseEntity<KeyValueResponse>(sr, headers, HttpStatus.CREATED);
-		} catch (JedisDataException e) {
-			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} finally {
-			if (jedis != null) {
-				jedis.close();
-			}
-		}
-	}
-	
-	@GetMapping("/hgetall/{key}")
-	public ResponseEntity<?> hgetall(@PathVariable String key) {
-		JedisDriver jedis = null;
-		try {
-			jedis = new JedisDriver(redisIP, port);
-			HashResponse hr = new HashResponse(key, jedis.hgetAll(key));
-			return ResponseEntity.ok(hr);
-		} catch (HashSetEmptyException e) {
+		} catch (SetEmptyException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-		} catch (JedisDataException e) {
-			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -106,16 +60,41 @@ public class RedisHashController {
 		}
 	}
 	
-	@GetMapping("/hget/{key}/{field}")
-	public ResponseEntity<?> hget(@PathVariable("key") String key, @PathVariable("field") String field) {
+	@GetMapping("/zrange/{key}/{start}/{stop}")
+	public ResponseEntity<?> zrange(@PathVariable("key") String key, @PathVariable("start") Long start, @PathVariable("stop") Long stop) {
 		JedisDriver jedis = null;
 		try {
 			jedis = new JedisDriver(redisIP, port);
-			KeyValueResponse sr = new KeyValueResponse(key, jedis.hget(key, field));
+			SetResponse sr = new SetResponse(key, jedis.zrange(key, start, stop));
 			return ResponseEntity.ok(sr);
-		} catch (KeyValueNotFoundException e) {
+		} catch (JedisDataException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		} catch (SetEmptyException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
+		}
+	}
+	
+	@PostMapping("/zadd/{key}/{score}/{value}")
+	public ResponseEntity<?> zadd(@PathVariable("key") String key, @PathVariable("score") Double score, @PathVariable("value") String value) {
+		JedisDriver jedis = null;
+		try {
+			jedis = new JedisDriver(redisIP, port);
+			Map<String, Double> map = new HashMap<>();
+			map.put(value, score);
+			Long created = jedis.zadd(key, map);
+			Map<String, Long> response = new HashMap<>();
+			response.put("created", created);
+			HttpHeaders h = new HTTPHeaders().location(String.format("/redis/zrange/%s/all",key));
+			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -129,17 +108,16 @@ public class RedisHashController {
 		}
 	}
 	
-	@DeleteMapping("/hdel/{key}/{field}")
-	public ResponseEntity<?> hdel(@PathVariable("key") String key, @PathVariable("field") String field) {
+	@PostMapping(value="/zadd/{key}", consumes={"application/json"})
+	public ResponseEntity<?> zadd(@PathVariable String key, @RequestBody Map<String, Double> map) {
 		JedisDriver jedis = null;
 		try {
 			jedis = new JedisDriver(redisIP, port);
-			Long index = jedis.hdel(key, field);
-			if (index == 0) {
-				return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.OK);
-			}
+			Long created = jedis.zadd(key, map);
+			Map<String, Long> response = new HashMap<>();
+			response.put("created", created);
+			HttpHeaders h = new HTTPHeaders().location(String.format("/redis/zrange/%s/all", key));
+			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -153,20 +131,15 @@ public class RedisHashController {
 		}
 	}
 	
-	@DeleteMapping("/hdel/{key}")
-	public ResponseEntity<?> hdelall(@PathVariable String key) {
+	@DeleteMapping("/zrem/{key}/{field}")
+	public ResponseEntity<?> zrem(@PathVariable("key") String key, @PathVariable("field") String [] fields) {
 		JedisDriver jedis = null;
 		try {
 			jedis = new JedisDriver(redisIP, port);
-			Long index = jedis.del(key);
-			if (index == 0) {
-				return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.OK);
-			}
-		} catch (JedisDataException e) {
-			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			Long deleted = jedis.zrem(key, fields);
+			Map<String, Long> response = new HashMap<>();
+			response.put("deleted", deleted);
+			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);

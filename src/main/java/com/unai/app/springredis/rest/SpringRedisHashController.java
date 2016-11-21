@@ -1,6 +1,5 @@
 package com.unai.app.springredis.rest;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,8 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unai.app.redis.exception.HashSetEmptyException;
 import com.unai.app.redis.exception.KeyValueNotFoundException;
 import com.unai.app.redis.model.HashResponse;
-import com.unai.app.redis.model.StringResponse;
+import com.unai.app.redis.model.KeyValueResponse;
 import com.unai.app.springredis.service.HashRepository;
+import com.unai.app.utils.HTTPHeaders;
 
 @RestController
 @RequestMapping("/sredis")
@@ -36,8 +36,7 @@ public class SpringRedisHashController {
 	public ResponseEntity<?> hmset(@PathVariable String key, @RequestBody Map<Object, Object> hashset) {
 		try {
 			hashRepository.hmset(key, hashset);
-			HttpHeaders h = new HttpHeaders();
-			h.setLocation(URI.create(String.format("/sredis/hgetall/%s", key)));
+			HttpHeaders h = new HTTPHeaders().location(String.format("/sredis/hgetall/%s", key));
 			return new ResponseEntity<HashResponse>(new HashResponse(key, hashset), h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -49,8 +48,7 @@ public class SpringRedisHashController {
 	public ResponseEntity<?> hset(@PathVariable("key") String key, @PathVariable("field") String field, @PathVariable("value") String value) {
 		try {
 			hashRepository.hset(key, field, value);
-			HttpHeaders h = new HttpHeaders();
-			h.setLocation(URI.create(String.format("/sredis/hget/%s/%s", key, field)));
+			HttpHeaders h = new HTTPHeaders().location(String.format("/sredis/hget/%s/%s", key, field));
 			HashResponse hr = new HashResponse(key, hashRepository.hgetall(key));
 			return new ResponseEntity<HashResponse>(hr, h, HttpStatus.OK);
 		} catch (Exception e) {
@@ -77,8 +75,8 @@ public class SpringRedisHashController {
 	@GetMapping("/hget/{key}/{field}")
 	public ResponseEntity<?> hget(@PathVariable("key") String key, @PathVariable("field") String field) {
 		try {
-			StringResponse sr = new StringResponse(String.format("%s[%s]", key, field), hashRepository.hget(key, field).toString());
-			return new ResponseEntity<StringResponse>(sr, HttpStatus.OK);
+			KeyValueResponse sr = new KeyValueResponse(String.format("%s[%s]", key, field), hashRepository.hget(key, field).toString());
+			return new ResponseEntity<KeyValueResponse>(sr, HttpStatus.OK);
 		} catch (NullPointerException|KeyValueNotFoundException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

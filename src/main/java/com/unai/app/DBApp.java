@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -24,6 +23,9 @@ public class DBApp {
 	
 	@Value("${redis.server.ip}")
 	private String redisIP;
+	
+	@Value("${redis.server.port}")
+	private Integer port;
 	
 	public static void main(String [] args) {
 		SpringApplication.run(DBApp.class, args);
@@ -56,6 +58,7 @@ public class DBApp {
 	public JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory f = new JedisConnectionFactory();
 		f.setHostName(redisIP);
+		f.setPort(port);
 		return f;
 	}
 	

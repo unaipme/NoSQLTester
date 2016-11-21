@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unai.app.redis.JedisDriver;
 import com.unai.app.redis.model.ListResponse;
-import com.unai.app.redis.model.StringResponse;
+import com.unai.app.redis.model.KeyValueResponse;
 
 import redis.clients.jedis.exceptions.JedisDataException;
 
@@ -59,7 +59,7 @@ public class RedisListController {
 		JedisDriver jedis = null;
 		try {
 			jedis = new JedisDriver(redisIP, port);
-			StringResponse sr = new StringResponse(String.format("%s[%d]", key, index), jedis.lindex(key, index));
+			KeyValueResponse sr = new KeyValueResponse(String.format("%s[%d]", key, index), jedis.lindex(key, index));
 			return ResponseEntity.ok(sr);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage(), e);
