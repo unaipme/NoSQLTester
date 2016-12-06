@@ -1,23 +1,21 @@
 package com.unai.app.neo4j.model;
 
-import java.time.Year;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.neo4j.driver.v1.types.Node;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.unai.app.neo4j.model.serializer.PersonSerializer;
 
+@JsonSerialize(using = PersonSerializer.class)
 public class Person {
 	
-	private Year born;
+	private Integer born;
 	private String name;
 	
-	@JsonInclude(Include.NON_NULL)
-	@JsonManagedReference
-	private HashMap<RelationType, HashSet<Movie>> relations = new HashMap<RelationType, HashSet<Movie>>();
+	private HashMap<RelationType, Set<Movie>> relations = new HashMap<>();
 	
 	protected Person() {}
 	
@@ -25,25 +23,29 @@ public class Person {
 		this.name = name;
 	}
 	
-	public Person(String name, Year born) {
+	public Person(String name, Integer born) {
 		this.name = name;
 		this.born = born;
 	}
 
-	public Year getBorn() {
-		return born;
+	public Integer getBorn() {
+		return (born == null)?0:born;
 	}
 
-	public void setBorn(Year born) {
+	public void setBorn(Integer born) {
 		this.born = born;
 	}
 
 	public String getName() {
-		return name;
+		return (name == null)?"":name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public HashMap<RelationType, Set<Movie>> getRelations() {
+		return relations;
 	}
 	
 	public Person did(RelationType r, Movie m) {
@@ -62,7 +64,7 @@ public class Person {
 	public static Person fromNode(Node personNode) {
 		Person person = new Person(personNode.get("name").asString());
 		if (personNode.containsKey("born")) {
-			person.setBorn(Year.of(personNode.get("born").asInt()));
+			person.setBorn(personNode.get("born").asInt());
 		}
 		return person;
 	}
@@ -73,6 +75,14 @@ public class Person {
 		if (!(o instanceof Person)) return false;
 		Person p = (Person) o;
 		return p.getName() == getName();
+	}
+	
+	public boolean nameIsNull() {
+		return name == "" || name == null;
+	}
+	
+	public boolean bornIsNull() {
+		return born == 0 || born == null;
 	}
 	
 }

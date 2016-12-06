@@ -27,6 +27,10 @@ public enum RelationType {
 		properties.put(key, value);
 	}
 	
+	public boolean hasProperties() {
+		return !properties.isEmpty();
+	}
+	
 	public static RelationType fromRelationship(Relationship node) {
 		RelationType rt = valueOf(node.type());
 		for (Map.Entry<String, Object> e : node.asMap().entrySet()) {

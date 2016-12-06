@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unai.app.neo4j.Neo4jSession;
-import com.unai.app.neo4j.model.Person;
+import com.unai.app.neo4j.model.Movie;
 import com.unai.app.neo4j.model.Properties;
-import com.unai.app.neo4j.service.PersonService;
+import com.unai.app.neo4j.service.MovieService;
 import com.unai.app.utils.HTTPHeaders;
 
 @RestController
 @RequestMapping("/neo4j")
-public class Neo4jPersonController {
+public class Neo4jMovieController {
 	
 	@Value("${neo4j.server.uri}")
 	private String uri;
@@ -37,18 +37,18 @@ public class Neo4jPersonController {
 	@Value("${neo4j.user.password}")
 	private String password;
 	
-	private Logger log = LoggerFactory.getLogger(Neo4jPersonController.class);
+	private Logger log = LoggerFactory.getLogger(Neo4jMovieController.class);
 	
 	@Autowired
-	private PersonService personService;
+	private MovieService movieService;
 	
-	@GetMapping("/people")
-	public ResponseEntity<?> getall() {
+	@GetMapping("/movies")
+	public ResponseEntity<?> getAll() {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
-			StatementResult result = session.run(personService.selectWhereQuery(Properties.createWhereProperties()));
-			return ResponseEntity.ok(personService.getAll(result));
+			StatementResult result = session.run("MATCH (movie:Movie)<-[relation]-(person:Person) RETURN movie, relation, person");
+			return ResponseEntity.ok(movieService.getAll(result));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -59,15 +59,15 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@GetMapping("/people/{name}")
-	public ResponseEntity<?> getOne(@PathVariable String name) {
+	@GetMapping("/movies/{title}")
+	public ResponseEntity<?> getOne(@PathVariable String title) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
 			Properties p = Properties.createWhereProperties();
-			p.add("name", name);
-			StatementResult result = session.run(personService.selectWhereQuery(p));
-			return ResponseEntity.ok(personService.getOne(result));
+			p.add("title", title);
+			StatementResult result = session.run(movieService.selectWhereQuery(p));
+			return ResponseEntity.ok(movieService.getOne(result));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,13 +78,13 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@PostMapping(value="/people", consumes={"application/json"})
-	public ResponseEntity<?> create(@RequestBody Person person) {
+	@PostMapping(value="/movies", consumes={"application/json"})
+	public ResponseEntity<?> create(@RequestBody Movie movie) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
-			session.run(personService.createQuery(person));
-			HTTPHeaders h = new HTTPHeaders().location(String.format("/neo4j/people/%s", person.getName().replaceAll(" ", "%20")));
+			session.run(movieService.createQuery(movie));
+			HTTPHeaders h = new HTTPHeaders().location(String.format("/neo4j/movies/%s", movie.getTitle().replaceAll(" ", "%20")));
 			return new ResponseEntity<Void>(h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -96,14 +96,14 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@DeleteMapping("/people/{name}")
-	public ResponseEntity<?> delete(@PathVariable String name) {
+	@DeleteMapping("/movie/{title}")
+	public ResponseEntity<?> delete(@PathVariable String title) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
 			Properties p = Properties.createWhereProperties();
-			p.add("name", name);
-			session.run(personService.deleteQuery(p));
+			p.add("title", title);
+			session.run(movieService.deleteQuery(p));
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -115,12 +115,12 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@PutMapping("/people/{where}/{set}")
+	@PutMapping("/movies/{where}/{set}")
 	public ResponseEntity<?> update(@PathVariable("where") String where, @PathVariable("set") String set) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
-			session.run(personService.updateQuery(where, set));
+			session.run(movieService.updateQuery(where, set));
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

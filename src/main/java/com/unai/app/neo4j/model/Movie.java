@@ -1,24 +1,22 @@
 package com.unai.app.neo4j.model;
 
-import java.time.Year;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.neo4j.driver.v1.types.Node;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.unai.app.neo4j.model.serializer.MovieSerializer;
 
+@JsonSerialize(using = MovieSerializer.class)
 public class Movie {
 	
 	private String tagline;
 	private String title;
-	private Year released;
+	private Integer released;
 	
-	@JsonInclude(Include.NON_NULL)
-	@JsonBackReference
-	private HashMap<RelationType, HashSet<Person>> relations = new HashMap<RelationType, HashSet<Person>>();
+	private HashMap<RelationType, Set<Person>> relations = new HashMap<>();
 	
 	protected Movie() {}
 	
@@ -26,7 +24,7 @@ public class Movie {
 		this.title = title;
 	}
 	
-	public Movie(String title, Year released) {
+	public Movie(String title, Integer released) {
 		this.title = title;
 		this.released = released;
 	}
@@ -36,14 +34,14 @@ public class Movie {
 		this.tagline = tagline;
 	}
 	
-	public Movie(String title, String tagline, Year released) {
+	public Movie(String title, String tagline, Integer released) {
 		this.title = title;
 		this.tagline = tagline;
 		this.released = released;
 	}
 
 	public String getTagline() {
-		return tagline;
+		return (tagline == null)?"":tagline;
 	}
 
 	public void setTagline(String tagline) {
@@ -51,21 +49,25 @@ public class Movie {
 	}
 
 	public String getTitle() {
-		return title;
+		return (title == null)?"":title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	public Year getReleased() {
-		return released;
+	public Integer getReleased() {
+		return (released==null)?0:released;
 	}
 
-	public void setReleased(Year released) {
+	public void setReleased(Integer released) {
 		this.released = released;
 	}
 	
+	public HashMap<RelationType, Set<Person>> getRelations() {
+		return relations;
+	}
+
 	public Movie doneBy(RelationType r, Person p) {
 		relations.putIfAbsent(r, new HashSet<Person>());
 		relations.get(r).add(p);
@@ -82,7 +84,7 @@ public class Movie {
 	public static Movie fromNode(Node movieNode) {
 		Movie movie = new Movie(movieNode.get("title").asString());
 		if (movieNode.containsKey("released")) {
-			movie.setReleased(Year.of(movieNode.get("released").asInt()));
+			movie.setReleased(movieNode.get("released").asInt());
 		}
 		if (movieNode.containsKey("tagline")) {
 			movie.setTagline(movieNode.get("tagline").asString());
@@ -96,6 +98,18 @@ public class Movie {
 		if (!(o instanceof Movie)) return false;
 		Movie m = (Movie) o;
 		return m.getTitle() == getTitle() && m.getReleased() == getReleased();
+	}
+	
+	public boolean titleIsNull() {
+		return title == "" || title == null;
+	}
+	
+	public boolean taglineIsNull() {
+		return tagline == "" || tagline == null;
+	}
+	
+	public boolean releasedIsNull() {
+		return released == 0 || released == null;
 	}
 	
 }
