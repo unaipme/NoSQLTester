@@ -36,7 +36,7 @@ public class SpringRedisHyperLogLogController {
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -49,7 +49,7 @@ public class SpringRedisHyperLogLogController {
 			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -58,10 +58,10 @@ public class SpringRedisHyperLogLogController {
 		try {
 			hllRepository.pfmerge(destKey, sourceKey);
 			HttpHeaders h = new HTTPHeaders().location(String.format("/sredis/pfcount/%s", destKey));
-			return new ResponseEntity<Void>(h, HttpStatus.OK);
+			return new ResponseEntity<>(h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

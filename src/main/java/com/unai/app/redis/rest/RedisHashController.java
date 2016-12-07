@@ -49,10 +49,10 @@ public class RedisHashController {
 			return new ResponseEntity<HashResponse>(hr, headers, HttpStatus.CREATED);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -72,10 +72,10 @@ public class RedisHashController {
 			return new ResponseEntity<KeyValueResponse>(sr, headers, HttpStatus.CREATED);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -92,13 +92,13 @@ public class RedisHashController {
 			return ResponseEntity.ok(hr);
 		} catch (HashSetEmptyException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -115,13 +115,13 @@ public class RedisHashController {
 			return ResponseEntity.ok(sr);
 		} catch (KeyValueNotFoundException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -136,16 +136,16 @@ public class RedisHashController {
 			jedis = new JedisDriver(redisIP, port);
 			Long index = jedis.hdel(key, field);
 			if (index == 0) {
-				return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
-				return new ResponseEntity<Void>(HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -160,16 +160,16 @@ public class RedisHashController {
 			jedis = new JedisDriver(redisIP, port);
 			Long index = jedis.del(key);
 			if (index == 0) {
-				return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
-				return new ResponseEntity<Void>(HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();

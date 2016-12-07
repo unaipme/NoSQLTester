@@ -43,10 +43,10 @@ public class RedisListController {
 			return ResponseEntity.ok(response);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -63,10 +63,10 @@ public class RedisListController {
 			return ResponseEntity.ok(sr);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -83,10 +83,10 @@ public class RedisListController {
 			return ResponseEntity.ok(lr);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -100,13 +100,13 @@ public class RedisListController {
 		try {
 			jedis = new JedisDriver(redisIP, port);
 			jedis.del(key);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -120,13 +120,13 @@ public class RedisListController {
 		try {
 			jedis = new JedisDriver(redisIP, port);
 			jedis.lrem(key, count, value);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();

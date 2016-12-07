@@ -40,10 +40,10 @@ public class SpringRedisSortedSetController {
 			return ResponseEntity.ok(sr);
 		} catch (SetEmptyException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -54,10 +54,10 @@ public class SpringRedisSortedSetController {
 			return ResponseEntity.ok(sr);
 		} catch (SetEmptyException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class SpringRedisSortedSetController {
 			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -83,7 +83,7 @@ public class SpringRedisSortedSetController {
 			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class SpringRedisSortedSetController {
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class SpringRedisHashController {
 			return new ResponseEntity<HashResponse>(new HashResponse(key, hashset), h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class SpringRedisHashController {
 			return new ResponseEntity<HashResponse>(hr, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -65,10 +65,10 @@ public class SpringRedisHashController {
 			return new ResponseEntity<HashResponse>(hr, HttpStatus.OK);
 		} catch (HashSetEmptyException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -79,10 +79,10 @@ public class SpringRedisHashController {
 			return new ResponseEntity<KeyValueResponse>(sr, HttpStatus.OK);
 		} catch (NullPointerException|KeyValueNotFoundException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -90,10 +90,10 @@ public class SpringRedisHashController {
 	public ResponseEntity<?> hdel(@PathVariable("key") String key, @PathVariable("field") String field) {
 		try {
 			hashRepository.hdel(key, field);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

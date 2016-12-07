@@ -40,7 +40,7 @@ public class RedisHyperLogLogController {
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -59,7 +59,7 @@ public class RedisHyperLogLogController {
 			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -73,10 +73,10 @@ public class RedisHyperLogLogController {
 		try {
 			jedis = new JedisDriver(redisIP, port);
 			jedis.pfmerge(destKey, sourceKey);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();

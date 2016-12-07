@@ -42,7 +42,7 @@ public class SpringRedisListController {
 			return new ResponseEntity<HashMap<String, Long>>(response, h, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -54,10 +54,10 @@ public class SpringRedisListController {
 			return ResponseEntity.ok(sr);
 		} catch (NullPointerException|KeyValueNotFoundException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -69,10 +69,10 @@ public class SpringRedisListController {
 			return ResponseEntity.ok(lr);
 		} catch (ListEmptyException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -80,10 +80,10 @@ public class SpringRedisListController {
 	public ResponseEntity<?> lremall(@PathVariable String key) {
 		try {
 			listRepository.lrem(key);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -91,10 +91,10 @@ public class SpringRedisListController {
 	public ResponseEntity<?> lrem(@PathVariable("key") String key, @PathVariable("field") String field) {
 		try {
 			listRepository.lrem(key, field);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -102,10 +102,10 @@ public class SpringRedisListController {
 	public ResponseEntity<?> lrem(@PathVariable("key") String key, @PathVariable("field") String field, @PathVariable("count") Long count) {
 		try {
 			listRepository.lrem(key, field, count);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

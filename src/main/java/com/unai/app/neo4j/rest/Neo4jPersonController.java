@@ -25,7 +25,7 @@ import com.unai.app.neo4j.service.PersonService;
 import com.unai.app.utils.HTTPHeaders;
 
 @RestController
-@RequestMapping("/neo4j")
+@RequestMapping("/neo4j/people")
 public class Neo4jPersonController {
 	
 	@Value("${neo4j.server.uri}")
@@ -42,7 +42,7 @@ public class Neo4jPersonController {
 	@Autowired
 	private PersonService personService;
 	
-	@GetMapping("/people")
+	@GetMapping("/")
 	public ResponseEntity<?> getall() {
 		Neo4jSession session = null;
 		try {
@@ -51,7 +51,7 @@ public class Neo4jPersonController {
 			return ResponseEntity.ok(personService.getAll(result));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -59,7 +59,7 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@GetMapping("/people/{name}")
+	@GetMapping("/{name}")
 	public ResponseEntity<?> getOne(@PathVariable String name) {
 		Neo4jSession session = null;
 		try {
@@ -70,7 +70,7 @@ public class Neo4jPersonController {
 			return ResponseEntity.ok(personService.getOne(result));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -78,17 +78,17 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@PostMapping(value="/people", consumes={"application/json"})
+	@PostMapping(value="/", consumes={"application/json"})
 	public ResponseEntity<?> create(@RequestBody Person person) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
 			session.run(personService.createQuery(person));
 			HTTPHeaders h = new HTTPHeaders().location(String.format("/neo4j/people/%s", person.getName().replaceAll(" ", "%20")));
-			return new ResponseEntity<Void>(h, HttpStatus.OK);
+			return new ResponseEntity<>(h, HttpStatus.CREATED);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -96,7 +96,7 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@DeleteMapping("/people/{name}")
+	@DeleteMapping("/{name}")
 	public ResponseEntity<?> delete(@PathVariable String name) {
 		Neo4jSession session = null;
 		try {
@@ -104,10 +104,10 @@ public class Neo4jPersonController {
 			Properties p = Properties.createWhereProperties();
 			p.add("name", name);
 			session.run(personService.deleteQuery(p));
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -115,16 +115,16 @@ public class Neo4jPersonController {
 		}
 	}
 	
-	@PutMapping("/people/{where}/{set}")
+	@PutMapping("/{where}/{set}")
 	public ResponseEntity<?> update(@PathVariable("where") String where, @PathVariable("set") String set) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
 			session.run(personService.updateQuery(where, set));
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();

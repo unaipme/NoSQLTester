@@ -25,7 +25,7 @@ import com.unai.app.neo4j.service.MovieService;
 import com.unai.app.utils.HTTPHeaders;
 
 @RestController
-@RequestMapping("/neo4j")
+@RequestMapping("/neo4j/movies")
 public class Neo4jMovieController {
 	
 	@Value("${neo4j.server.uri}")
@@ -42,7 +42,7 @@ public class Neo4jMovieController {
 	@Autowired
 	private MovieService movieService;
 	
-	@GetMapping("/movies")
+	@GetMapping("/")
 	public ResponseEntity<?> getAll() {
 		Neo4jSession session = null;
 		try {
@@ -51,7 +51,7 @@ public class Neo4jMovieController {
 			return ResponseEntity.ok(movieService.getAll(result));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -59,7 +59,7 @@ public class Neo4jMovieController {
 		}
 	}
 	
-	@GetMapping("/movies/{title}")
+	@GetMapping("/{title}")
 	public ResponseEntity<?> getOne(@PathVariable String title) {
 		Neo4jSession session = null;
 		try {
@@ -70,7 +70,7 @@ public class Neo4jMovieController {
 			return ResponseEntity.ok(movieService.getOne(result));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -78,17 +78,17 @@ public class Neo4jMovieController {
 		}
 	}
 	
-	@PostMapping(value="/movies", consumes={"application/json"})
+	@PostMapping(value="/", consumes={"application/json"})
 	public ResponseEntity<?> create(@RequestBody Movie movie) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
 			session.run(movieService.createQuery(movie));
 			HTTPHeaders h = new HTTPHeaders().location(String.format("/neo4j/movies/%s", movie.getTitle().replaceAll(" ", "%20")));
-			return new ResponseEntity<Void>(h, HttpStatus.OK);
+			return new ResponseEntity<>(h, HttpStatus.CREATED);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -96,7 +96,7 @@ public class Neo4jMovieController {
 		}
 	}
 	
-	@DeleteMapping("/movie/{title}")
+	@DeleteMapping("/{title}")
 	public ResponseEntity<?> delete(@PathVariable String title) {
 		Neo4jSession session = null;
 		try {
@@ -104,10 +104,10 @@ public class Neo4jMovieController {
 			Properties p = Properties.createWhereProperties();
 			p.add("title", title);
 			session.run(movieService.deleteQuery(p));
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -115,16 +115,16 @@ public class Neo4jMovieController {
 		}
 	}
 	
-	@PutMapping("/movies/{where}/{set}")
+	@PutMapping("/{where}/{set}")
 	public ResponseEntity<?> update(@PathVariable("where") String where, @PathVariable("set") String set) {
 		Neo4jSession session = null;
 		try {
 			session = getSession(uri, username, password);
 			session.run(movieService.updateQuery(where, set));
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (session != null) {
 				session.close();

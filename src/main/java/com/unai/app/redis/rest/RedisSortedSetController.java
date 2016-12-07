@@ -46,13 +46,13 @@ public class RedisSortedSetController {
 			return new ResponseEntity<SetResponse>(sr, HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (SetEmptyException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -69,13 +69,13 @@ public class RedisSortedSetController {
 			return ResponseEntity.ok(sr);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (SetEmptyException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -97,10 +97,10 @@ public class RedisSortedSetController {
 			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -120,10 +120,10 @@ public class RedisSortedSetController {
 			return new ResponseEntity<Map<String, Long>>(response, h, HttpStatus.OK);
 		} catch (JedisDataException e) {
 			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -142,7 +142,7 @@ public class RedisSortedSetController {
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
