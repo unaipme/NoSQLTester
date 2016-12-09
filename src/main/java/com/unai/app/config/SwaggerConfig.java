@@ -30,7 +30,7 @@ public class SwaggerConfig {
 		Contact contact = new Contact("Unai Perez", "https://github.com/unaipme", "unaipme@gmail.com");
 		return new ApiInfo(
 				"NoSQLTester",
-				"",
+				"Rest API with endpoints with which test different NoSQL systems, such as Redis or Neo4j",
 				"",
 				"",
 				contact,

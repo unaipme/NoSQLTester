@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +28,13 @@ import redis.clients.jedis.exceptions.JedisDataException;
 @RequestMapping("/redis")
 public class RedisHashController {
 	
-	@Value("${redis.server.ip}")
-	private String redisIP;
-	
-	@Value("${redis.server.port}")
-	private int port;
-	
 	private Logger log = LoggerFactory.getLogger(RedisHashController.class);
 	
 	@PostMapping(value="/hmset/{key}", consumes={"application/json"})
 	public ResponseEntity<?> hmset(@PathVariable String key, @RequestBody Map<String, String> hashset) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			HashResponse hr = new HashResponse(key, hashset);
 			jedis.hmset(hr);
 			jedis.close();
@@ -64,7 +57,7 @@ public class RedisHashController {
 	public ResponseEntity<?> hset(@PathVariable("key") String key, @PathVariable("field") String field, @PathVariable String value) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			KeyValueResponse sr = new KeyValueResponse(field, value);
 			jedis.hset(key, sr);
 			jedis.close();
@@ -87,7 +80,7 @@ public class RedisHashController {
 	public ResponseEntity<?> hgetall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			HashResponse hr = new HashResponse(key, jedis.hgetAll(key));
 			return ResponseEntity.ok(hr);
 		} catch (HashSetEmptyException e) {
@@ -110,7 +103,7 @@ public class RedisHashController {
 	public ResponseEntity<?> hget(@PathVariable("key") String key, @PathVariable("field") String field) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			KeyValueResponse sr = new KeyValueResponse(key, jedis.hget(key, field));
 			return ResponseEntity.ok(sr);
 		} catch (KeyValueNotFoundException e) {
@@ -133,7 +126,7 @@ public class RedisHashController {
 	public ResponseEntity<?> hdel(@PathVariable("key") String key, @PathVariable("field") String field) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Long index = jedis.hdel(key, field);
 			if (index == 0) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -157,7 +150,7 @@ public class RedisHashController {
 	public ResponseEntity<?> hdelall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Long index = jedis.del(key);
 			if (index == 0) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

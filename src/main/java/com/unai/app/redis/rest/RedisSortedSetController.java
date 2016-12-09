@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +28,13 @@ import redis.clients.jedis.exceptions.JedisDataException;
 @RequestMapping("/redis")
 public class RedisSortedSetController {
 	
-	@Value("${redis.server.ip}")
-	private String redisIP;
-	
-	@Value("${redis.server.port}")
-	private int port;
-	
 	private Logger log = LoggerFactory.getLogger(RedisSortedSetController.class);
 	
 	@GetMapping("/zrange/{key}/all")
 	public ResponseEntity<?> zrangeall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			SetResponse sr = new SetResponse(key, jedis.zrange(key, 0, -1));
 			return new ResponseEntity<SetResponse>(sr, HttpStatus.OK);
 		} catch (JedisDataException e) {
@@ -64,7 +57,7 @@ public class RedisSortedSetController {
 	public ResponseEntity<?> zrange(@PathVariable("key") String key, @PathVariable("start") Long start, @PathVariable("stop") Long stop) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			SetResponse sr = new SetResponse(key, jedis.zrange(key, start, stop));
 			return ResponseEntity.ok(sr);
 		} catch (JedisDataException e) {
@@ -87,7 +80,7 @@ public class RedisSortedSetController {
 	public ResponseEntity<?> zadd(@PathVariable("key") String key, @PathVariable("score") Double score, @PathVariable("value") String value) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Map<String, Double> map = new HashMap<>();
 			map.put(value, score);
 			Long created = jedis.zadd(key, map);
@@ -112,7 +105,7 @@ public class RedisSortedSetController {
 	public ResponseEntity<?> zadd(@PathVariable String key, @RequestBody Map<String, Double> map) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Long created = jedis.zadd(key, map);
 			Map<String, Long> response = new HashMap<>();
 			response.put("created", created);
@@ -135,7 +128,7 @@ public class RedisSortedSetController {
 	public ResponseEntity<?> zrem(@PathVariable("key") String key, @PathVariable("field") String [] fields) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Long deleted = jedis.zrem(key, fields);
 			Map<String, Long> response = new HashMap<>();
 			response.put("deleted", deleted);

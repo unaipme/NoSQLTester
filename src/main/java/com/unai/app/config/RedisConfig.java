@@ -1,6 +1,5 @@
 package com.unai.app.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -10,18 +9,11 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 
 @Configuration
 public class RedisConfig {
-
-	@Value("${redis.server.ip}")
-	private String redisIP;
-	
-	@Value("${redis.server.port}")
-	private Integer port;
 	
 	@Bean
 	public JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory f = new JedisConnectionFactory();
-		f.setHostName(redisIP);
-		f.setPort(port);
+		f.setHostName(System.getenv("REDISCLOUD_URL"));
 		return f;
 	}
 	

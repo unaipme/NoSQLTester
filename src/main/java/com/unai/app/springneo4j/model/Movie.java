@@ -1,16 +1,19 @@
 package com.unai.app.springneo4j.model;
 
-import java.util.Set;
+import java.util.List;
 
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 @NodeEntity
+@JsonIdentityInfo(generator=JSOGGenerator.class)
 public class Movie {
 	
 	@GraphId @JsonIgnore private Long id;
@@ -19,8 +22,8 @@ public class Movie {
 	private String tagline;
 	
 	@JsonInclude(Include.NON_EMPTY)
-	@Relationship(type="ACTED_IN", direction = Relationship.INCOMING)
-	private Set<Role> cast;
+	@Relationship(type="ACTED_IN", direction=Relationship.INCOMING)
+	private List<Role> cast;
 	
 	public Movie() {}
 
@@ -48,11 +51,11 @@ public class Movie {
 		this.tagline = tagline;
 	}
 
-	public Set<Role> getCast() {
+	public List<Role> getCast() {
 		return cast;
 	}
 
-	public void setCast(Set<Role> cast) {
+	public void setCast(List<Role> cast) {
 		this.cast = cast;
 	}
 

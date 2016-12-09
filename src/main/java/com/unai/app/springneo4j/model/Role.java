@@ -7,10 +7,12 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.RelationshipEntity;
 import org.neo4j.ogm.annotation.StartNode;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.unai.app.neo4j.model.Movie;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 @RelationshipEntity(type="ACTED_IN")
+@JsonIdentityInfo(generator=JSOGGenerator.class)
 public class Role {
 	
 	@GraphId @JsonIgnore private Long id;
@@ -18,12 +20,17 @@ public class Role {
 	@StartNode
 	private Person person;
 	
-	@EndNode
+	@EndNode @JsonIgnore
 	private Movie movie;
 	
 	private Set<String> roles;
 	
 	public Role(){}
+	
+	public Role(Person p, Movie m) {
+		this.person = p;
+		this.movie = m;
+	}
 
 	public Person getPerson() {
 		return person;

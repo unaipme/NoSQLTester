@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +20,6 @@ import com.unai.app.utils.HTTPHeaders;
 @RestController
 @RequestMapping("/redis")
 public class RedisHyperLogLogController {
-
-	@Value("${redis.server.ip}")
-	private String redisIP;
-	
-	@Value("${redis.server.port}")
-	private int port;
 	
 	private Logger log = LoggerFactory.getLogger(RedisHyperLogLogController.class);
 	
@@ -34,7 +27,7 @@ public class RedisHyperLogLogController {
 	public ResponseEntity<?> pfcount(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Map<String, Long> response = new HashMap<>();
 			response.put("created", jedis.pfcount(key));
 			return ResponseEntity.ok(response);
@@ -52,7 +45,7 @@ public class RedisHyperLogLogController {
 	public ResponseEntity<?> pfadd(@PathVariable("key") String key, @PathVariable("elements") String [] elems) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Map<String, Long> response = new HashMap<>();
 			response.put("created", jedis.pfadd(key, elems));
 			HTTPHeaders h = new HTTPHeaders().location(String.format("/redis/pfcount/%s", key));
@@ -71,7 +64,7 @@ public class RedisHyperLogLogController {
 	public ResponseEntity<?> pfmerge(@PathVariable("destkey") String destKey, @PathVariable("sourcekey") String sourceKey) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			jedis.pfmerge(destKey, sourceKey);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {

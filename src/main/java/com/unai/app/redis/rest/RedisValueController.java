@@ -2,7 +2,6 @@ package com.unai.app.redis.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,19 +24,13 @@ import redis.clients.jedis.exceptions.JedisDataException;
 @RequestMapping("/redis")
 public class RedisValueController {
 	
-	@Value("${redis.server.ip}")
-	private String redisIP;
-	
-	@Value("${redis.server.port}")
-	private int port;
-	
 	private Logger log = LoggerFactory.getLogger(RedisValueController.class);
 	
 	@GetMapping("/get/{key}")
 	public ResponseEntity<?> get(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			KeyValueResponse sr = new KeyValueResponse(key, jedis.get(key));
 			return ResponseEntity.ok(sr);
 		} catch (KeyValueNotFoundException e) {
@@ -61,7 +54,7 @@ public class RedisValueController {
 								@PathVariable("value") String value) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			KeyValueResponse sr = new KeyValueResponse(key, value);
 			jedis.set(sr);
 			HttpHeaders headers = new HTTPHeaders().location(String.format("/redis/set/%s", key));
@@ -83,7 +76,7 @@ public class RedisValueController {
 	public ResponseEntity<?> set(@RequestBody KeyValueResponse sr) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			jedis.set(sr);
 			HttpHeaders headers = new HTTPHeaders().location(String.format("/redis/set/%s", sr.getKey()));
 			return new ResponseEntity<KeyValueResponse>(sr, headers, HttpStatus.CREATED);
@@ -104,7 +97,7 @@ public class RedisValueController {
 	public ResponseEntity<?> del(@PathVariable String [] key) {
 		JedisDriver jedis = null;
 		try {
-			jedis = new JedisDriver(redisIP, port);
+			jedis = new JedisDriver();
 			Long count = jedis.del(key);
 			if (count == 0) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

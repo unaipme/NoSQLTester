@@ -6,10 +6,13 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 @NodeEntity
+@JsonIdentityInfo(generator=JSOGGenerator.class)
 public class Person {
 	
 	@GraphId private Long id;
@@ -17,24 +20,8 @@ public class Person {
 	private Integer born;	
 
 	@JsonInclude(Include.NON_EMPTY)
-	@Relationship(type="ACTED_IN")
+	@Relationship(type="ACTED_IN", direction=Relationship.OUTGOING)
 	private List<Movie> acted_in;
-
-	@JsonInclude(Include.NON_EMPTY)
-	@Relationship(type="DIRECTED")
-	private List<Movie> directed;
-	
-	@JsonInclude(Include.NON_EMPTY)
-	@Relationship(type="PRODUCED")
-	private List<Movie> produced;
-	
-	@JsonInclude(Include.NON_EMPTY)
-	@Relationship(type="WROTE")
-	private List<Movie> wrote;
-	
-	@JsonInclude(Include.NON_EMPTY)
-	@Relationship(type="REVIEWED")
-	private List<Movie> reviewed;
 	
 	public Person(){}
 	
@@ -48,38 +35,6 @@ public class Person {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public List<Movie> getDirected() {
-		return directed;
-	}
-
-	public void setDirected(List<Movie> directed) {
-		this.directed = directed;
-	}
-
-	public List<Movie> getProduced() {
-		return produced;
-	}
-
-	public void setProduced(List<Movie> produced) {
-		this.produced = produced;
-	}
-
-	public List<Movie> getWrote() {
-		return wrote;
-	}
-
-	public void setWrote(List<Movie> wrote) {
-		this.wrote = wrote;
-	}
-
-	public List<Movie> getReviewed() {
-		return reviewed;
-	}
-
-	public void setReviewed(List<Movie> reviewed) {
-		this.reviewed = reviewed;
 	}
 
 	public String getName() {

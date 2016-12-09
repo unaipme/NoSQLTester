@@ -7,8 +7,10 @@ import redis.clients.jedis.Jedis;
 
 public class JedisDriver extends Jedis {
 	
-	public JedisDriver(String host, final int port) {
-		super(host, port);
+	private static final String host = System.getenv("REDISCLOUD_URL");
+	
+	public JedisDriver() {
+		super(host);
 	}
 	
 	public String set(KeyValueResponse s) {
