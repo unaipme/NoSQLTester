@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.1.RELEASE</version>
+		<version>1.4.2.RELEASE</version>
 		<relativePath />
 	</parent>
 	
@@ -76,18 +76,28 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.heroku.sdk</groupId>
+				<artifactId>heroku-maven-plugin</artifactId>
+				<version>1.1.2</version>
 				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.unai.app.DBApp</mainClass>
-						</manifest>
-					</archive>
+					<appName>nosqltester</appName>
+					<processTypes>
+						<web>mvn spring-boot:run</web>
+					</processTypes>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 	
 </project>
