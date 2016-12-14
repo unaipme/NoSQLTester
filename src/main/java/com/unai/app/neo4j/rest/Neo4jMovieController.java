@@ -27,8 +27,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@Api
 @RequestMapping("/neo4j/movies")
+@Api
 public class Neo4jMovieController {
 	
 	private Logger log = LoggerFactory.getLogger(Neo4jMovieController.class);

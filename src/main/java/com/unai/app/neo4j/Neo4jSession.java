@@ -1,8 +1,7 @@
 package com.unai.app.neo4j;
 
+import java.io.Closeable;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
@@ -14,15 +13,14 @@ import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Transaction;
 import org.neo4j.driver.v1.types.TypeSystem;
 
-@Resource
-public class Neo4jSession implements Session {
+public class Neo4jSession implements Session, Closeable {
 	
 	private Driver driver;
 	private Session session;
 	
-	private final static String username = System.getenv("GRAPHENEDB_BOLT_USER");
-	private final static String password = System.getenv("GRAPHENEDB_BOLT_PASSWORD");
-	private final static String uri = System.getenv("GRAPHENEDB_BOLT_URL");
+	private final static String username = System.getenv("NEO4J_BOLT_USER");
+	private final static String password = System.getenv("NEO4J_BOLT_PASSWORD");
+	private final static String uri = System.getenv("NEO4J_BOLT_URL");
 	
 	public Neo4jSession() {
 		driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));

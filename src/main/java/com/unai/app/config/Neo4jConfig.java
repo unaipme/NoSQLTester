@@ -20,9 +20,9 @@ public class Neo4jConfig extends Neo4jConfiguration {
 	public org.neo4j.ogm.config.Configuration getConfiguration() {
 		org.neo4j.ogm.config.Configuration config = new org.neo4j.ogm.config.Configuration();
 		config.driverConfiguration()
-				.setCredentials(System.getenv("GRAPHENEDB_BOLT_USER"), System.getenv("GRAPHENEDB_BOLT_PASSWORD"))
+				.setCredentials(System.getenv("NEO4J_BOLT_USER"), System.getenv("NEO4J_BOLT_PASSWORD"))
 				.setDriverClassName("org.neo4j.ogm.drivers.http.driver.HttpDriver")
-				.setURI(System.getenv("GRAPHENEDB_URL"));
+				.setURI(System.getenv("NEO4J_URL"));
 		return config;
 	}
 
