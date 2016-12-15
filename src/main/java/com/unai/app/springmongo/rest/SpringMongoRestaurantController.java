@@ -103,7 +103,7 @@ public class SpringMongoRestaurantController {
 		}
 	}
 	
-	@DeleteMapping(value="/id/{id}")
+	@DeleteMapping("/id/{id}")
 	public ResponseEntity<?> delete(@PathVariable String id) {
 		try {
 			repo.delete(id);

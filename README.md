@@ -13,7 +13,7 @@ This project requires of Maven to work, and an instance of the database system y
 To download and run this project:
 
 ```
-git clone https:\\github.com\unaipme\NoSQLTester.git
+git clone https://github.com/unaipme/NoSQLTester.git
 mvn spring-boot:run
 ```
 
@@ -63,7 +63,7 @@ Este proyecto requiere de Maven para funcionar, y una instancia de cada sistema 
 
 Para descargar y ejecutar este proyecto:
 ```
-git clone https:\\github.com\unaipme\NoSQLTester.git
+git clone https://github.com/unaipme/NoSQLTester.git
 mvn spring-boot:run
 ```
 
