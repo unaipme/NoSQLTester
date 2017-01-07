@@ -45,6 +45,10 @@ An instance of the database server is needed, which can be downloaded [here](htt
 
 In the code, the Restaurants sample dataset is used. To install it, copy [this JSON file](https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json) to the database's _restaurants_ collection (That exact name is required) using the ``mongoimport`` command.
 
+### HBase
+
+An instance of the database server is needed, which can be downloaded [here](http://www.apache.org/dyn/closer.cgi/hbase/). I have NOT been able to make it work remotely, so this part of the API won't work unless the server is installed in the same computer that is running the API. Obviously, it won't work in Heroku either.
+
 The Gatling part is still long due, but as for now, the Swagger Springfox documentation can be used to check that all endpoints work as expected. It's possible to use Postman to run some quick test if wanted.
 
 **NoSQLTester** is now running online in [Heroku](https://nosqltester.herokuapp.com/), from which is possible to try the endpoints via the mentioned Springfox page, or directly use them via Postman.
@@ -93,7 +97,12 @@ En el código, se usa el dataset de ejemplo de películas. Es posible instalarlo
 
 Una instancia de la base de datos es necesaria, la cual se puede descargar [aquí](https://mongodb.com/download-center). Algunas variables de entorno son también necesarias. ``MONGODB_USER`` debe contener el nombre del usuario de MongoDB. ``MONGODB_PASSWORD`` contendrá la contraseña de dicho usuario. ``MONGODB_DB`` debe contener el nombre de la base de datos de autenticación del usuario. ``MONGODB_URI`` deberá contener la ruta al servidor. ``MONGODB_PORT`` contendrá el puerto en el que se ejecuta el servidor.
 
-El código se basa en el dataset de ejemplo Restaurants. Para instalarlo, copia [este archivo JSON](https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json) a la colección _restaurants_ de la base de datos (El nombre ha de ser exacto) utilizando el comando ``mongoimport``..
+El código se basa en el dataset de ejemplo Restaurants. Para instalarlo, copia [este archivo JSON](https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json) a la colección _restaurants_ de la base de datos (El nombre ha de ser exacto) utilizando el comando ``mongoimport``.
+
+### HBase
+
+Una instancia de la base de datos es necesaria, la cual se puede descargar [aquí](http://www.apache.org/dyn/closer.cgi/hbase/). NO he sido capaz de hacer funcionar la API con un servidor remoto, es decir, el servidor debe estar instalado en la misma máquina que ejecuta la API. Tampoco funcionará por la misma razón en Heroku.
+
 Aún queda hasta que pueda hacer la parte de Gatling, pero, por ahora, se puede usar Swagger Springfox para ver las endpoints disponibles y comprabar que funcionan. También se podría escribir algún test simple usando Postman.
 
 **NoSQLTester** está disponible para probar en línea ahora mismo desde [Heroku](https://nosqltester.herokuapp.com/). Ahí se puede acceder a Springfox y comprobar que funciona bien, o se pueden usar las endpoints directamente desde Postman.
