@@ -47,15 +47,24 @@ public class HBaseRestController {
 	
 	private Configuration config = HBaseConfiguration.create();
 	
-	private Connection conn;
+	private Connection conn = null;
 	
 	public static final String isNumeric = "[-+]?[0-9]*\\.?[0-9]+?";
 	
-	public HBaseRestController() throws IOException {
-		conn = ConnectionFactory.createConnection(config);
+	public HBaseRestController() {
+		try {
+			connect();
+		} catch (IOException e) {
+			log.error("HBase connection refused. Probably, the server is not up.");
+		}
 	}
 	
 	private Logger log = LoggerFactory.getLogger(HBaseRestController.class);
+	
+	private void connect() throws IOException {
+		if (conn == null)
+			conn = ConnectionFactory.createConnection(config);
+	}
 	
 	
 	@SuppressWarnings("deprecation")
@@ -63,6 +72,7 @@ public class HBaseRestController {
 	public ResponseEntity<?> getAll(@PathVariable("table") String tablename, @PathVariable("rowid") String rowid) throws IOException {
 		Table table = null;
 		try {
+			connect();
 			table = conn.getTable(TableName.valueOf(tablename));
 			Get get = new Get(Bytes.toBytes(rowid));
 			get.setMaxVersions(5);
@@ -78,6 +88,9 @@ public class HBaseRestController {
 		} catch (TableNotFoundException | NullPointerException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,6 +104,7 @@ public class HBaseRestController {
 	public ResponseEntity<?> getCf(@PathVariable("table") String tablename, @PathVariable("rowid") String rowid, @PathVariable("cf") String cf) throws IOException {
 		Table table = null;
 		try {
+			connect();
 			table = conn.getTable(TableName.valueOf(tablename));
 			Get get = new Get(Bytes.toBytes(rowid));
 			get.addFamily(Bytes.toBytes(cf));
@@ -106,6 +120,9 @@ public class HBaseRestController {
 		} catch (TableNotFoundException | NullPointerException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -120,6 +137,7 @@ public class HBaseRestController {
 										@PathVariable("col") String col) throws IOException {
 		Table table = null;
 		try {
+			connect();
 			table = conn.getTable(TableName.valueOf(tablename));
 			Get get = new Get(Bytes.toBytes(rowid));
 			get.addColumn(Bytes.toBytes(cf), Bytes.toBytes(col));
@@ -134,6 +152,9 @@ public class HBaseRestController {
 		} catch (TableNotFoundException | NullPointerException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -145,6 +166,7 @@ public class HBaseRestController {
 	@GetMapping("/tables")
 	public ResponseEntity<?> getTables() {
 		try {
+			connect();
 			Function<HColumnDescriptor, String> conv = d -> {return d.getNameAsString();};
 			HashMap<String, List<String>> ret = new HashMap<>();
 			for (TableName tn : conn.getAdmin().listTableNames()) {
@@ -155,6 +177,9 @@ public class HBaseRestController {
 				ret.put(tn.getNameAsString(), cfs);
 			}
 			return ResponseEntity.ok(ret);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -165,6 +190,7 @@ public class HBaseRestController {
 	public ResponseEntity<?> put(@PathVariable("table") String tablename, @PathVariable("rowid") String rowid, @PathVariable("cf") String cf,
 									@PathVariable("col") String col, @PathVariable("value") String value) {
 		try {
+			connect();
 			Put put = new Put(Bytes.toBytes(rowid));
 			put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(col), Bytes.toBytes(value));
 			conn.getTable(TableName.valueOf(tablename)).put(put);
@@ -172,6 +198,9 @@ public class HBaseRestController {
 		} catch (TableNotFoundException | NullPointerException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -181,6 +210,7 @@ public class HBaseRestController {
 	@RequestMapping(value="/tables/{table}/{rowid}", method={RequestMethod.POST, RequestMethod.PUT})
 	public ResponseEntity<?> putMany(@PathVariable("table") String table, @PathVariable("rowid") String rowid, @RequestBody HashMap<String, Object> values) {
 		try {
+			connect();
 			Put put = new Put(Bytes.toBytes(rowid));
 			for (Entry<String, Object> entry : values.entrySet()) {
 				String cf = entry.getKey().split(":")[0];
@@ -197,6 +227,9 @@ public class HBaseRestController {
 		} catch (TableNotFoundException | NullPointerException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -206,6 +239,7 @@ public class HBaseRestController {
 	@RequestMapping(value="/tables/{table}", method={RequestMethod.PUT, RequestMethod.POST})
 	public ResponseEntity<?> createTable(@PathVariable("table") String tablename, @RequestBody List<String> cfs) {
 		try {
+			connect();
 			Admin admin = conn.getAdmin();
 			HTableDescriptor htable = new HTableDescriptor(TableName.valueOf(tablename));
 			ListIterator<String> it = cfs.listIterator();
@@ -215,6 +249,9 @@ public class HBaseRestController {
 			}
 			admin.createTable(htable);
 			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -224,6 +261,7 @@ public class HBaseRestController {
 	@DeleteMapping("/tables/{table}")
 	public ResponseEntity<?> disableThenDeleteTable(@PathVariable String table) {
 		try {
+			connect();
 			Admin admin = conn.getAdmin();
 			TableName tablename = TableName.valueOf(Bytes.toBytes(table));
 			Map<String, String> resp = new HashMap<>();
@@ -239,6 +277,9 @@ public class HBaseRestController {
 		} catch (TableNotFoundException | NullPointerException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
