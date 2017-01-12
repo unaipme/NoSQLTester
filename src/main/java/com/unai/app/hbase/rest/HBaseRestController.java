@@ -52,18 +52,20 @@ public class HBaseRestController {
 	public static final String isNumeric = "[-+]?[0-9]*\\.?[0-9]+?";
 	
 	public HBaseRestController() {
-		try {
-			connect();
-		} catch (IOException e) {
-			log.error("HBase connection refused. Probably, the server is not up.");
-		}
+		connect();
 	}
 	
 	private Logger log = LoggerFactory.getLogger(HBaseRestController.class);
 	
-	private void connect() throws IOException {
-		if (conn == null)
-			conn = ConnectionFactory.createConnection(config);
+	private void connect() {
+		try {
+			if (conn == null)
+				conn = ConnectionFactory.createConnection(config);
+		} catch (IOException e) {
+			if (conn != null) {
+				conn.abort(e.getMessage(), e);
+			}
+		}
 	}
 	
 	

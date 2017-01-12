@@ -45,9 +45,11 @@ An instance of the database server is needed, which can be downloaded [here](htt
 
 In the code, the Restaurants sample dataset is used. To install it, copy [this JSON file](https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json) to the database's _restaurants_ collection (That exact name is required) using the ``mongoimport`` command.
 
-### HBase
+#### HBase
 
 An instance of the database server is needed, which can be downloaded [here](http://www.apache.org/dyn/closer.cgi/hbase/). I have NOT been able to make it work remotely, so this part of the API won't work unless the server is installed in the same computer that is running the API. Obviously, it won't work in Heroku either.
+
+In fact, a ConnectException will show many times on console, because HBase won't stop trying to connect. I don't know how to change this for now. Just know that other parts will still work.
 
 The Gatling part is still long due, but as for now, the Swagger Springfox documentation can be used to check that all endpoints work as expected. It's possible to use Postman to run some quick test if wanted.
 
@@ -99,9 +101,11 @@ Una instancia de la base de datos es necesaria, la cual se puede descargar [aqu�
 
 El código se basa en el dataset de ejemplo Restaurants. Para instalarlo, copia [este archivo JSON](https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json) a la colección _restaurants_ de la base de datos (El nombre ha de ser exacto) utilizando el comando ``mongoimport``.
 
-### HBase
+#### HBase
 
 Una instancia de la base de datos es necesaria, la cual se puede descargar [aquí](http://www.apache.org/dyn/closer.cgi/hbase/). NO he sido capaz de hacer funcionar la API con un servidor remoto, es decir, el servidor debe estar instalado en la misma máquina que ejecuta la API. Tampoco funcionará por la misma razón en Heroku.
+
+De hecho, un ConnectException sale en la consola cada poco tiempo, porque el client de HBase sigue intentando conectarse. De momento no sé como arreglarlo. Pero aun así, las demás partes funcionan correctamente.
 
 Aún queda hasta que pueda hacer la parte de Gatling, pero, por ahora, se puede usar Swagger Springfox para ver las endpoints disponibles y comprabar que funcionan. También se podría escribir algún test simple usando Postman.
 

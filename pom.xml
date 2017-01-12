@@ -10,7 +10,7 @@
 		<version>1.4.2.RELEASE</version>
 		<relativePath />
 	</parent>
-	
+
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -70,16 +70,6 @@
 	  		<artifactId>hbase-client</artifactId>
 	  		<version>1.2.4</version>
 	  	</dependency>
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-common</artifactId>
-			<version>2.7.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-mapreduce-client-common</artifactId>
-			<version>2.7.2</version>
-		</dependency>
 		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>

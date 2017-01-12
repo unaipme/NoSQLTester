@@ -5,4 +5,5 @@
 ▀▀ █▪ ▀█▄▀▪ ▀▀▀▀ ·▀▀█. .▀▀▀  ▀▀▀  ▀▀▀  ▀▀▀▀  ▀▀▀  ▀▀▀ .▀  ▀
 
 ${AnsiColor.BRIGHT_BLUE}by Unai Perez M. | https://github.com/unaipme
+${AnsiColor.BLACK}
 
