@@ -46,9 +46,11 @@ To create the user:
 use <preferred db's name>
 db.createRole({
 	role: "testerrole",
-    privileges: [
-    	{db: <your db>, collection: "restaurants"}
-    ], roles: []
+    	privileges: [{
+		resource: {db: <your db>, collection: "restaurants"},
+		actions: ["insert", "find", "update", "remove"]
+	}],
+	roles: []
 });
 db.createUser({
 	user: <username>,
@@ -114,13 +116,15 @@ Para crear el usuario:
 use <preferred db's name>
 db.createRole({
 	role: "testerrole",
-    privileges: [
-    	{db: <tu base>, collection: "restaurants"}
-    ], roles: []
+    	privileges: [{
+		resource: {db: <your db>, collection: "restaurants"},
+		actions: ["insert", "find", "update", "remove"]
+	}],
+	roles: []
 });
 db.createUser({
-	user: <nombre de usuario>,
-    pwd: <contraseña>,
+	user: <username>,
+    pwd: <password>,
     roles: ["testerrole"]
 });
 ```
