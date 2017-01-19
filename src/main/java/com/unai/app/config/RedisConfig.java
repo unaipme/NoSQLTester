@@ -10,10 +10,14 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 @Configuration
 public class RedisConfig {
 	
+	private static final String host = System.getenv("REDIS_URL");
+	private static final Integer port = Integer.parseInt(System.getenv("REDIS_PORT"));
+	
 	@Bean
 	public JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory f = new JedisConnectionFactory();
-		f.setHostName(System.getenv("REDISCLOUD_URL"));
+		f.setHostName(host);
+		f.setPort(port);
 		return f;
 	}
 	
