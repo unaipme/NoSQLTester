@@ -117,7 +117,11 @@ public class PersonService implements Neo4jService<Person> {
 	@Override
 	public String selectWhereQuery(Properties properties) { 
 		properties.setPrefix("person");
-		return String.format("MATCH (person:Person) WHERE %s OPTIONAL MATCH (person)-[relation]->(movie:Movie) RETURN person, relation, movie", properties.parse());
+		if (properties.isEmpty()) {
+			return "MATCH (person:Person) OPTIONAL MATCH (person)-[relation]->(movie:Movie) RETURN person, relation, movie";
+		} else {
+			return String.format("MATCH (person:Person) WHERE %s OPTIONAL MATCH (person)-[relation]->(movie:Movie) RETURN person, relation, movie", properties.parse());
+		}
 	}
 	
 }

@@ -91,7 +91,11 @@ public class MovieService implements Neo4jService<Movie> {
 	@Override
 	public String selectWhereQuery(Properties properties) {
 		properties.setPrefix("movie");
-		return String.format("MATCH (movie:Movie) WHERE %s OPTIONAL MATCH (movie)<-[relation]-(person:Person) RETURN movie, relation, person", properties.parse());
+		if (properties.isEmpty()) {
+			return "MATCH (movie:Movie) OPTIONAL MATCH (movie)<-[relation]-(person:Person) RETURN movie, relation, person";
+		} else {
+			return String.format("MATCH (movie:Movie) WHERE %s OPTIONAL MATCH (movie)<-[relation]-(person:Person) RETURN movie, relation, person", properties.parse());
+		}
 	}
 
 	@Override
