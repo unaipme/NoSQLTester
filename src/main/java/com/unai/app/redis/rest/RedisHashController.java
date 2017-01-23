@@ -22,15 +22,19 @@ import com.unai.app.redis.model.HashResponse;
 import com.unai.app.redis.model.KeyValueResponse;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import redis.clients.jedis.exceptions.JedisDataException;
 
 @RestController
 @RequestMapping("/redis")
+@Api
 public class RedisHashController {
 	
 	private Logger log = LoggerFactory.getLogger(RedisHashController.class);
 	
 	@PostMapping(value="/hmset/{key}", consumes={"application/json"})
+	@ApiOperation(notes="public ResponseEntity<?> hmset(String, Map<String, String>)::38", value="Adds the elements on the request body to the hash.")
 	public ResponseEntity<?> hmset(@PathVariable String key, @RequestBody Map<String, String> hashset) {
 		JedisDriver jedis = null;
 		try {
@@ -54,6 +58,7 @@ public class RedisHashController {
 	}
 	
 	@PostMapping("/hset/{key}/{field}/{value}")
+	@ApiOperation(notes="public ResponseEntity<?> hset(String, String, String)::62", value="Sets the value of an element with the given field name on the set with the given key.")
 	public ResponseEntity<?> hset(@PathVariable("key") String key, @PathVariable("field") String field, @PathVariable String value) {
 		JedisDriver jedis = null;
 		try {
@@ -77,6 +82,7 @@ public class RedisHashController {
 	}
 	
 	@GetMapping("/hgetall/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> hgetall(String)::86", value="Gets all values of the hash with the given key.")
 	public ResponseEntity<?> hgetall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
@@ -100,6 +106,7 @@ public class RedisHashController {
 	}
 	
 	@GetMapping("/hget/{key}/{field}")
+	@ApiOperation(notes="public ResponseEntity<?> hget(String, String)::110", value="Gets only the specified fields from the set with the given key.")
 	public ResponseEntity<?> hget(@PathVariable("key") String key, @PathVariable("field") String field) {
 		JedisDriver jedis = null;
 		try {
@@ -123,6 +130,7 @@ public class RedisHashController {
 	}
 	
 	@DeleteMapping("/hdel/{key}/{field}")
+	@ApiOperation(notes="public ResponseEntity<?> hdel(String, String)::134", value="Deletes the specified fields from the set with the given key.")
 	public ResponseEntity<?> hdel(@PathVariable("key") String key, @PathVariable("field") String field) {
 		JedisDriver jedis = null;
 		try {
@@ -147,6 +155,7 @@ public class RedisHashController {
 	}
 	
 	@DeleteMapping("/hdel/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> hdelall(String)", value="Deletes the set with the given key and all its elements.")
 	public ResponseEntity<?> hdelall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {

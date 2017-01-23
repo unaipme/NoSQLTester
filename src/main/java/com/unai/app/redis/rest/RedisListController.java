@@ -17,15 +17,19 @@ import com.unai.app.redis.JedisDriver;
 import com.unai.app.redis.model.KeyValueResponse;
 import com.unai.app.redis.model.ListResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import redis.clients.jedis.exceptions.JedisDataException;
 
 @RestController
 @RequestMapping("/rest")
+@Api
 public class RedisListController {
 	
 	private Logger log = LoggerFactory.getLogger(RedisListController.class);
 	
 	@PostMapping("/lpush/{key}/{values}")
+	@ApiOperation(notes="public ResponseEntity<?> lpush(String, String [])::33", value="Adds (prepends) the values into the list with the given key.")
 	public ResponseEntity<?> lpush(@PathVariable("key") String key, @PathVariable("values") String [] values) {
 		JedisDriver jedis = null;
 		try {
@@ -48,6 +52,7 @@ public class RedisListController {
 	}
 	
 	@GetMapping("/lindex/{key}/{index}")
+	@ApiOperation(notes="public ResponseEntity<?> lindex(String, Long)::56", value="Gets the element on the given index of the list with the given key.")
 	public ResponseEntity<?> lindex(@PathVariable("key") String key, @PathVariable("index") Long index) {
 		JedisDriver jedis = null;
 		try {
@@ -68,6 +73,7 @@ public class RedisListController {
 	}
 	
 	@GetMapping("/lindex/{key}/all")
+	@ApiOperation(notes="public ResponseEntity<?> lall(String)::77", value="Gets all elements in list with given key.")
 	public ResponseEntity<?> lall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
@@ -88,6 +94,7 @@ public class RedisListController {
 	}
 	
 	@DeleteMapping("/lrem/{key}/all")
+	@ApiOperation(notes="public ResponseEntity<?> lremall(String)::98", value="Removes the list with the given key and all its elements.")
 	public ResponseEntity<?> lremall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
@@ -108,6 +115,7 @@ public class RedisListController {
 	}
 	
 	@DeleteMapping("/lrem/{key}/{value}/{count}")
+	@ApiOperation(notes="public ResponseEntity<?> lrem(String, Long, String)", value="Removes the specified first occurrences of defined element from the list with the given key.")
 	public ResponseEntity<?> lrem(@PathVariable("key") String key, @PathVariable(value="count", required=false) Long count, @PathVariable("value") String value) {
 		JedisDriver jedis = null;
 		try {

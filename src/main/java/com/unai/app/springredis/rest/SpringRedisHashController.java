@@ -23,6 +23,8 @@ import com.unai.app.redis.model.KeyValueResponse;
 import com.unai.app.springredis.service.HashRepository;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/sredis")
 public class SpringRedisHashController {
@@ -33,6 +35,7 @@ public class SpringRedisHashController {
 	private Logger log = LoggerFactory.getLogger(SpringRedisHashController.class);
 	
 	@PostMapping(value="/hmset/{key}", consumes={"application/json"})
+	@ApiOperation(notes="public ResponseEntity<?> hmset(String, Map<Object, Object>)::39", value="Adds the elements on the request body to the hash.")
 	public ResponseEntity<?> hmset(@PathVariable String key, @RequestBody Map<Object, Object> hashset) {
 		try {
 			hashRepository.hmset(key, hashset);
@@ -45,6 +48,7 @@ public class SpringRedisHashController {
 	}
 	
 	@PostMapping("/hset/{key}/{field}/{value}")
+	@ApiOperation(notes="public ResponseEntity<?> hset(String, String, String)::52", value="Sets the value of an element with the given field name on the set with the given key.")
 	public ResponseEntity<?> hset(@PathVariable("key") String key, @PathVariable("field") String field, @PathVariable("value") String value) {
 		try {
 			hashRepository.hset(key, field, value);
@@ -58,6 +62,7 @@ public class SpringRedisHashController {
 	}
 	
 	@GetMapping("/hgetall/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> hgetall(String)::66", value="Gets all values of the hash with the given key.")
 	public ResponseEntity<?> hgetall(@PathVariable String key) {
 		try {
 			Map<Object, Object> map = hashRepository.hgetall(key);
@@ -73,6 +78,7 @@ public class SpringRedisHashController {
 	}
 	
 	@GetMapping("/hget/{key}/{field}")
+	@ApiOperation(notes="public ResponseEntity<?> hget(String, String)::82", value="Gets only the specified fields from the set with the given key.")
 	public ResponseEntity<?> hget(@PathVariable("key") String key, @PathVariable("field") String field) {
 		try {
 			KeyValueResponse sr = new KeyValueResponse(String.format("%s[%s]", key, field), hashRepository.hget(key, field).toString());
@@ -87,6 +93,7 @@ public class SpringRedisHashController {
 	}
 	
 	@DeleteMapping("/hdel/{key}/{field}")
+	@ApiOperation(notes="public ResponseEntity<?> hdel(String, String)::97", value="Deletes the specified fields from the set with the given key.")
 	public ResponseEntity<?> hdel(@PathVariable("key") String key, @PathVariable("field") String field) {
 		try {
 			hashRepository.hdel(key, field);

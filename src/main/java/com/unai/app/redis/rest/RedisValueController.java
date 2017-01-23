@@ -18,6 +18,7 @@ import com.unai.app.redis.exception.KeyValueNotFoundException;
 import com.unai.app.redis.model.KeyValueResponse;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.ApiOperation;
 import redis.clients.jedis.exceptions.JedisDataException;
 
 @RestController
@@ -27,6 +28,7 @@ public class RedisValueController {
 	private Logger log = LoggerFactory.getLogger(RedisValueController.class);
 	
 	@GetMapping("/get/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> get(String)::32", value="Gets the value of the given key.")
 	public ResponseEntity<?> get(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
@@ -50,8 +52,8 @@ public class RedisValueController {
 	}
 	
 	@PostMapping(value="/set/{key}/{value}")
-	public ResponseEntity<?> set(@PathVariable("key") String key,
-								@PathVariable("value") String value) {
+	@ApiOperation(notes="public ResponseEntity<?> set(String, String)::56", value="Sets (or creates) the given key to the given value.")
+	public ResponseEntity<?> set(@PathVariable("key") String key, @PathVariable("value") String value) {
 		JedisDriver jedis = null;
 		try {
 			jedis = new JedisDriver();
@@ -73,6 +75,7 @@ public class RedisValueController {
 	}
 	
 	@PostMapping("/set")
+	@ApiOperation(notes="public ResponseEntity<?> set(KeyValueResponse)::80", value="Sets (or creates) the key to the value, from the request body.")
 	public ResponseEntity<?> set(@RequestBody KeyValueResponse sr) {
 		JedisDriver jedis = null;
 		try {
@@ -94,6 +97,7 @@ public class RedisValueController {
 	}
 	
 	@DeleteMapping("/del/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> del(String [])::102", value="Deletes the given keys and their values.")
 	public ResponseEntity<?> del(@PathVariable String [] key) {
 		JedisDriver jedis = null;
 		try {

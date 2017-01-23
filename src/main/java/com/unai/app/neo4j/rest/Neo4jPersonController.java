@@ -37,12 +37,12 @@ public class Neo4jPersonController {
 	private PersonService personService;
 	
 	@GetMapping("/")
-	@ApiOperation("Gets the information of all the people stored in the database.")
+	@ApiOperation(notes="public ResponseEntity<?> getAll()::45", value="Gets the information of all the people stored in the database.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="All went as expected."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
 	})
-	public ResponseEntity<?> getall() {
+	public ResponseEntity<?> getAll() {
 		Neo4jSession session = null;
 		try {
 			session = new Neo4jSession();
@@ -59,7 +59,7 @@ public class Neo4jPersonController {
 	}
 	
 	@GetMapping("/{name}")
-	@ApiOperation("Gets the information of the person with the given name.")
+	@ApiOperation(notes="public ResponseEntity<?> getOne(String)::68", value="Gets the information of the person with the given name.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="All worked as expected."),
 		@ApiResponse(code=404, message="No person was found with the given name."),
@@ -89,7 +89,7 @@ public class Neo4jPersonController {
 	}
 	
 	@PostMapping(value="/", consumes={"application/json"})
-	@ApiOperation("Creates a new person on the database from the JSON body received.")
+	@ApiOperation(notes="public ResponseEntity<?> create(Person)::92", value="Creates a new person on the database from the JSON body received.")
 	@ApiResponses({
 		@ApiResponse(code=201, message="The person was successfully created."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -112,7 +112,7 @@ public class Neo4jPersonController {
 	}
 	
 	@DeleteMapping("/{name}")
-	@ApiOperation("Deletes the person with the given name.")
+	@ApiOperation(notes="public ResponseEntity<?> delete(String)::120", value="Deletes the person with the given name.")
 	@ApiResponses({
 		@ApiResponse(code=204, message="The person was successfully deleted (or didn't exist in the first place)."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -136,7 +136,7 @@ public class Neo4jPersonController {
 	}
 	
 	@PutMapping("/{where}/{set}")
-	@ApiOperation("Updates the people that match with the comma-separated clauses in the \"where\" part of the URL, setting the comma-separated properties.")
+	@ApiOperation(notes="public ResponseEntity<?> update(String, String)::144", value="Updates the people that match with the comma-separated clauses in the \"where\" part of the URL, setting the comma-separated properties.")
 	@ApiResponses({
 		@ApiResponse(code=204, message="The people were successfully updated."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")

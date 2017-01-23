@@ -25,18 +25,24 @@ import com.unai.app.mongo.MongoSession;
 import com.unai.app.mongo.model.Restaurant;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/mongo/restaurants")
+@Api
 public class MongoRestaurantController {
 	
 	private Logger log = Logger.getLogger(MongoRestaurantController.class);
 	
 	@GetMapping("/")
+	@ApiOperation(notes="public RedirectView getFirst()::40", value="Gets the first hundred restaurants.")
 	public RedirectView getFirst() {
 		return new RedirectView("/mongo/restaurants/index/0");
 	}
 	
 	@GetMapping("/id/{id}")
+	@ApiOperation(notes="public ResponseEntity<?> getOne(String)::46", value="Gets the restaurant with the given ID.")
 	public ResponseEntity<?> getOne(@PathVariable String id) {
 		MongoSession session = null;
 		try {
@@ -55,6 +61,7 @@ public class MongoRestaurantController {
 	}
 	
 	@GetMapping("/index/{index}")
+	@ApiOperation(notes="public ResponseEntity<?> getFrom(Integer)::65", value="Gets restaurants in lists of hundreds, depending on the received index number.")
 	public ResponseEntity<?> getFrom(@PathVariable Integer index) {
 		MongoSession session = null;
 		try {
@@ -77,6 +84,7 @@ public class MongoRestaurantController {
 	}
 	
 	@GetMapping("/id/{id}/address")
+	@ApiOperation(notes="public ResponseEntity<?> getAddress(String)::88", value="Gets the address field of the restaurant with the given ID.")
 	public ResponseEntity<?> getAddress(@PathVariable String id) {
 		MongoSession session = null;
 		try {
@@ -95,6 +103,7 @@ public class MongoRestaurantController {
 	}
 	
 	@PostMapping(value="/", consumes={"application/json"})
+	@ApiOperation(notes="public ResponseEntity<?> create(Restaurant)::107", value="Creates a restaurant from the fields on the request body.")
 	public ResponseEntity<?> create(@RequestBody Restaurant restaurant) {
 		MongoSession session = null;
 		try {
@@ -111,6 +120,7 @@ public class MongoRestaurantController {
 	}
 	
 	@PutMapping(value="/id/{id}", consumes={"application/json"})
+	@ApiOperation(notes="public ResponseEntity<?> update(String, Restaurant)::124", value="Updates the fields of the restaurant with the given ID from the fields of the request body.")
 	public ResponseEntity<?> update(@PathVariable String id, @RequestBody Restaurant restaurant) {
 		MongoSession session = null;
 		try {
@@ -126,6 +136,7 @@ public class MongoRestaurantController {
 	}
 	
 	@DeleteMapping("/id/{id}")
+	@ApiOperation(notes="public ResponseEntity<?> detele(String)::140", value="Deletes the restaurant with the given ID.")
 	public ResponseEntity<?> delete(@PathVariable String id) {
 		MongoSession session = null;
 		try {

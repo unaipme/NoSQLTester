@@ -32,7 +32,7 @@ public class SpringNeo4jMovieController {
 	private MovieRepository movieRepository;
 	
 	@GetMapping("/")
-	@ApiOperation("Gets all movies and their casts in the database.")
+	@ApiOperation(notes="public ResponseEntity<?> getAll()::40", value="Gets all movies and their casts in the database.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="All worked as expected (the set will be empty if no records were created)."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -47,7 +47,7 @@ public class SpringNeo4jMovieController {
 	}
 	
 	@GetMapping("/{title}")
-	@ApiOperation("Gets the information and cast of the movie with the given title.")
+	@ApiOperation(notes="public ResponseEntity<?> getOne(String)::56", value="Gets the information and cast of the movie with the given title.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="All worked as expected."),
 		@ApiResponse(code=404, message="No movie was found with the given title."),
@@ -67,8 +67,7 @@ public class SpringNeo4jMovieController {
 	}
 	
 	@PostMapping(value="/", consumes={"application/json"})
-	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation("Creates a new movie from the JSON body received.")
+	@ApiOperation(notes="public ResponseEntity<?> create(Movie)::75", value="Creates a new movie from the JSON body received.")
 	@ApiResponses({
 		@ApiResponse(code=201, message="The movie was created successfully."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -85,7 +84,7 @@ public class SpringNeo4jMovieController {
 	
 	@DeleteMapping("/{title}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiOperation("Deletes the movie with the given title.")
+	@ApiOperation(notes="public ResponseEntity<?> delete(String)::92", value="Deletes the movie with the given title.")
 	@ApiResponses({
 		@ApiResponse(code=204, message="The movie was successfully deleted (or didn't exist at all)."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -103,7 +102,5 @@ public class SpringNeo4jMovieController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
 	
 }

@@ -23,6 +23,8 @@ import com.unai.app.redis.model.ListResponse;
 import com.unai.app.springredis.service.ListRepository;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/sredis")
 public class SpringRedisListController {
@@ -33,6 +35,7 @@ public class SpringRedisListController {
 	private Logger log = LoggerFactory.getLogger(SpringRedisListController.class);
 	
 	@PostMapping("/lpush/{key}/{values}")
+	@ApiOperation(notes="public ResponseEntity<?> lpush(String, String [])::39", value="Adds (prepends) the values into the list with the given key.")
 	public ResponseEntity<?> lpush(@PathVariable("key") String key, @PathVariable("values") String [] values) {
 		try {
 			Long created = listRepository.lpush(key, values);
@@ -47,6 +50,7 @@ public class SpringRedisListController {
 	}
 	
 	@GetMapping("/lindex/{key}/{index}")
+	@ApiOperation(notes="public ResponseEntity<?> lindex(String, Long)::54", value="Gets the element on the given index of the list with the given key.")
 	public ResponseEntity<?> lindex(@PathVariable("key") String key, @PathVariable("index") Long index) {
 		try {
 			String result = listRepository.lindex(key, index).toString();
@@ -62,6 +66,7 @@ public class SpringRedisListController {
 	}
 	
 	@GetMapping("/lindex/{key}/all")
+	@ApiOperation(notes="public ResponseEntity<?> lall(String)::70", value="Gets all elements in list with given key.")
 	public ResponseEntity<?> lall(@PathVariable String key) {
 		try {
 			List<Object> list = listRepository.lall(key);
@@ -77,6 +82,7 @@ public class SpringRedisListController {
 	}
 	
 	@DeleteMapping("/lrem/{key}/all")
+	@ApiOperation(notes="public ResponseEntity<?> lremall(String)::86", value="Removes the list with the given key and all its elements.")
 	public ResponseEntity<?> lremall(@PathVariable String key) {
 		try {
 			listRepository.lrem(key);
@@ -88,6 +94,7 @@ public class SpringRedisListController {
 	}
 	
 	@DeleteMapping("/lrem/{key}/field/{field}")
+	@ApiOperation(notes="public ResponseEntity<?> lrem(String, String)::98", value="Deletes all fields with given name from the list with given key.")
 	public ResponseEntity<?> lrem(@PathVariable("key") String key, @PathVariable("field") String field) {
 		try {
 			listRepository.lrem(key, field);
@@ -99,6 +106,7 @@ public class SpringRedisListController {
 	}
 	
 	@DeleteMapping("/lrem/{key}/field/{field}/{count}")
+	@ApiOperation(notes="public ResponseEntity<?> lrem(String, String, Long)::110", value="Deletes as many elements with the given name as specified by count, from the list with given key.")
 	public ResponseEntity<?> lrem(@PathVariable("key") String key, @PathVariable("field") String field, @PathVariable("count") Long count) {
 		try {
 			listRepository.lrem(key, field, count);

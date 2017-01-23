@@ -17,8 +17,12 @@ import com.unai.app.redis.model.KeyValueResponse;
 import com.unai.app.springredis.service.ValueRepository;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/sredis")
+@Api
 public class SpringRedisValueController {
 	
 	@Autowired
@@ -27,6 +31,7 @@ public class SpringRedisValueController {
 	private Logger log = LoggerFactory.getLogger(SpringRedisValueController.class);
 	
 	@GetMapping("/get/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> get(String)::35", value="Gets the value of the given key.")
 	public ResponseEntity<?> get(@PathVariable String key) {
 		try {
 			String value = valueRepository.get(key).toString();
@@ -45,6 +50,7 @@ public class SpringRedisValueController {
 	}
 	
 	@PostMapping("/set/{key}/{value}")
+	@ApiOperation(notes="public ResponseEntity<?> set(String, String)::54", value="Sets (or creates) the given key to the given value.")
 	public ResponseEntity<?> set(@PathVariable("key") String key, @PathVariable("value") String value) {
 		try {
 			KeyValueResponse rs = new KeyValueResponse(key, value);
@@ -61,6 +67,7 @@ public class SpringRedisValueController {
 	}
 	
 	@DeleteMapping("/del/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> del(String)::71", value="Deletes the given keys and their values.")
 	public ResponseEntity<?> del(@PathVariable String key) {
 		try {
 			valueRepository.del(key);

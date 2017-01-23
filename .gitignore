@@ -1,5 +1,7 @@
 ﻿.classpath
 .project
+.sonar/
+sonar-project.properties
 .settings/
 target/
 *.class

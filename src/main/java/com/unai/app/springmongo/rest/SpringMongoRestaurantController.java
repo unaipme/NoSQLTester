@@ -21,8 +21,12 @@ import com.unai.app.springmongo.model.Restaurant;
 import com.unai.app.springmongo.repo.RestaurantRepository;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/smongo/restaurants")
+@Api
 public class SpringMongoRestaurantController {
 	
 	private Logger log = Logger.getLogger(SpringMongoRestaurantController.class);
@@ -36,6 +40,7 @@ public class SpringMongoRestaurantController {
 	}
 	
 	@GetMapping("/page/{page}")
+	@ApiOperation(notes="public ResponseEntity<?> getFrom(Integer)::44", value="Gets the selected page of hundred restaurants.")
 	public ResponseEntity<?> getFrom(@PathVariable Integer page) {
 		try {
 			HTTPHeaders h = new HTTPHeaders().location(String.format("/smongo/from/%d", page + 1));
@@ -47,6 +52,7 @@ public class SpringMongoRestaurantController {
 	}
 	
 	@GetMapping("/id/{id}")
+	@ApiOperation(notes="public ResponseEntity<?> getOne(String)::56", value="Gets the restaurant with the given ID.")
 	public ResponseEntity<?> getOne(@PathVariable String id) {
 		try {
 			Restaurant r = repo.findOne(id);
@@ -62,6 +68,7 @@ public class SpringMongoRestaurantController {
 	}
 	
 	@GetMapping("/id/{id}/address")
+	@ApiOperation(notes="public ResponseEntity<?> getAddress(String)::72", value="Gets the address of the restaurant with the given ID.")
 	public ResponseEntity<?> getAddress(@PathVariable String id) {
 		try {
 			Restaurant r = repo.findOne(id);
@@ -77,6 +84,7 @@ public class SpringMongoRestaurantController {
 	}
 	
 	@PostMapping(value="/", consumes={"application/json"})
+	@ApiOperation(notes="public ResponseEntity<?> create(Restaurant)::88", value="Creates a new restaurant from the fields of the request body.")
 	public ResponseEntity<?> create(@RequestBody Restaurant restaurant) {
 		try {
 			repo.insert(restaurant);
@@ -89,6 +97,7 @@ public class SpringMongoRestaurantController {
 	}
 	
 	@PutMapping(value="/id/{id}", consumes={"application/json"})
+	@ApiOperation(notes="public ResponseEntity<?> update(String, Map<String, Object>)::101", value="Sets the fields of the restaurant with the given ID to the fields of the request body.")
 	public ResponseEntity<?> update(@PathVariable String id, @RequestBody Map<String, Object> properties) {
 		try {
 			Restaurant restaurant = repo.findOne(id);
@@ -104,6 +113,7 @@ public class SpringMongoRestaurantController {
 	}
 	
 	@DeleteMapping("/id/{id}")
+	@ApiOperation(notes="public ResponseEntity<?> delete(String)::117", value="Deletes the restaurant with the given ID.")
 	public ResponseEntity<?> delete(@PathVariable String id) {
 		try {
 			repo.delete(id);

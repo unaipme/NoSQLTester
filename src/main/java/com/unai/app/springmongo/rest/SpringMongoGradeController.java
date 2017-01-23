@@ -21,6 +21,7 @@ import com.unai.app.springmongo.repo.RestaurantRepository;
 import com.unai.app.utils.HTTPHeaders;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/smongo/restaurants")
@@ -33,6 +34,7 @@ public class SpringMongoGradeController {
 	private RestaurantRepository repo;
 	
 	@GetMapping("/id/{id}/grades")
+	@ApiOperation(notes="public ResponseEntity<?> getGrades(String)::38", value="Gets the grades of the restaurant with the given ID.")
 	public ResponseEntity<?> getGrades(@PathVariable String id) {
 		try {
 			Restaurant r = repo.findOne(id);
@@ -47,6 +49,7 @@ public class SpringMongoGradeController {
 	}
 	
 	@GetMapping("/id/{id}/grades/{index}")
+	@ApiOperation(notes="public ResponseEntity<?> getGrade(String, Integer)::53", value="Get the grade in the given index of the restaurant with the given ID.")
 	public ResponseEntity<?> getGrade(@PathVariable("id") String id, @PathVariable("index") Integer index) {
 		try {
 			Restaurant r = repo.findOne(id);
@@ -62,6 +65,7 @@ public class SpringMongoGradeController {
 	}
 	
 	@PostMapping("/id/{id}/grades")
+	@ApiOperation(notes="public ResponseEntity<?> add(String, Grade)::69", value="Adds to the restaurant with the given ID a grade with the fields of the request body.")
 	public ResponseEntity<?> add(@PathVariable String id, @RequestBody Grade grade) {
 		try {
 			Restaurant r = repo.findOne(id);
@@ -83,6 +87,7 @@ public class SpringMongoGradeController {
 	}
 	
 	@PutMapping("/id/{id}/grades/{index}/score/{score}")
+	@ApiOperation(notes="public ResponseEntity<?> updateScore(String, Integer, Integer)::91", value="Updates the score of the grade of the specified index of the restaurant with the given ID.")
 	public ResponseEntity<?> updateScore(@PathVariable("id") String id, @PathVariable("index") Integer index, @PathVariable("score") Integer score) {
 		try {
 			Restaurant r = repo.findOne(id);
@@ -100,6 +105,7 @@ public class SpringMongoGradeController {
 	}
 	
 	@PutMapping("/id/{id}/grades/{index}/grade/{grade}")
+	@ApiOperation(notes="public ResponseEntity<?> updateGrade(String, Integer, String)::109", value="Updates the grade of the specified index of the restaurant with the given ID.")
 	public ResponseEntity<?> updateGrade(@PathVariable("id") String id, @PathVariable("index") Integer index, @PathVariable("grade") String grade) {
 		try {
 			Restaurant r = repo.findOne(id);
@@ -117,6 +123,7 @@ public class SpringMongoGradeController {
 	}
 	
 	@DeleteMapping("/id/{id}/grades/{index}")
+	@ApiOperation(notes="public ResponseEntity<?> delete(String, Integer)::127", value="Deletes the grade of the given index from the restaurant with the given ID.")
 	public ResponseEntity<?> delete(@PathVariable("id") String id, @PathVariable("index") Integer index) {
 		try {
 			Restaurant r = repo.findOne(id);

@@ -1,7 +1,5 @@
 package com.unai.app.springneo4j.rest;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +34,22 @@ public class SpringNeo4jPersonController {
 	private SpringPersonService personService;
 	
 	@GetMapping("/")
-	@ApiOperation("Gets all the information of all people stored in the database.")
-	@ApiResponse(code=200, message="All worked as expected")
-	public List<Person> getAll() {
-		return personService.findAll();
+	@ApiOperation(notes="public ResponseEntity<?> getAll()::42", value="Gets all the information of all people stored in the database.")
+	@ApiResponses({
+		@ApiResponse(code=200, message="All worked as expected"),
+		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
+	})
+	public ResponseEntity<?> getAll() {
+		try {
+			return ResponseEntity.ok(personService.findAll());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@GetMapping("/{name}")
-	@ApiOperation("Gets all the information of the person with the given name.")
+	@ApiOperation(notes="public ResponseEntity<?> getOne(String)::60", value="Gets all the information of the person with the given name.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="All worked as expected."),
 		@ApiResponse(code=404, message="No person with the given name was found in the database."),
@@ -64,15 +70,23 @@ public class SpringNeo4jPersonController {
 	}
 	
 	@GetMapping("/olderthan/{age}")
-	@ApiOperation("Gets all people that are older than the specified age.")
-	@ApiResponse(code=200, message="All worked as expected (But result set may be empty because no one is older than that age).")
-	public List<Person> getOlderThan(@PathVariable Integer age) {
-		return personService.findOlderThan(age);
+	@ApiOperation(notes="public ResponseEntity<?> getOlderThan(Integer)::80", value="Gets all people that are older than the specified age.")
+	@ApiResponses({
+		@ApiResponse(code=200, message="All worked as expected (But result set may be empty because no one is older than that age)."),
+		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
+	})
+	public ResponseEntity<?> getOlderThan(@PathVariable Integer age) {
+		try {
+			return ResponseEntity.ok(personService.findOlderThan(age));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@PostMapping(value="/people", consumes={"application/json"})
 	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation("Creates the person in the database, from the JSON body received.")
+	@ApiOperation(notes="public ResponseEntity<?> create(Person)::96", value="Creates the person in the database, from the JSON body received.")
 	@ApiResponses({
 		@ApiResponse(code=201, message="The person was created successfully."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -89,7 +103,7 @@ public class SpringNeo4jPersonController {
 	
 	@DeleteMapping("/{name}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiOperation("Deletes a person with the given name from the database.")
+	@ApiOperation(notes="public ResponseEntity<?> delete(String)::114", value="Deletes a person with the given name from the database.")
 	@ApiResponses({
 		@ApiResponse(code=204, message="The person was successfully deleted."),
 		@ApiResponse(code=404, message="No person was found with the given name."),
@@ -111,7 +125,7 @@ public class SpringNeo4jPersonController {
 	
 	@PutMapping("/{name}/acted_in/{title}/as/{role}")
 	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation("Records an actor's appearance to a movie.")
+	@ApiOperation(notes="public ResponseEntity<?> actedIn(String, String, String, String [])::135", value="Records an actor's appearance to a movie.")
 	@ApiResponses({
 		@ApiResponse(code=201, message="The new role was successfully created."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")

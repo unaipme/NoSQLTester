@@ -37,7 +37,7 @@ public class Neo4jMovieController {
 	private MovieService movieService;
 	
 	@GetMapping("/")
-	@ApiOperation("Gets all movies and their casts in the database.")
+	@ApiOperation(notes="public ResponseEntity<?> getAll()::45", value="Gets all movies and their casts in the database.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="All worked as expected (the set will be empty if no records were created)."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -59,7 +59,7 @@ public class Neo4jMovieController {
 	}
 	
 	@GetMapping("/{title}")
-	@ApiOperation("Gets the information of the movie with the given title.")
+	@ApiOperation(notes="public ResponseEntity<?> getOne(String)::68", value="Gets the information of the movie with the given title.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="Everything went as expected."),
 		@ApiResponse(code=404, message="No movie was found with the given title."),
@@ -89,7 +89,7 @@ public class Neo4jMovieController {
 	}
 	
 	@PostMapping(value="/", consumes={"application/json"})
-	@ApiOperation("Creates a new movie from the JSON body received.")
+	@ApiOperation(notes="public ResponseEntity<?> create(Movie)::97", value="Creates a new movie from the JSON body received.")
 	@ApiResponses({
 		@ApiResponse(code=201, message="The movie was created successfully."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -112,7 +112,7 @@ public class Neo4jMovieController {
 	}
 	
 	@DeleteMapping("/{title}")
-	@ApiOperation("Deletes the movie with the given title.")
+	@ApiOperation(notes="public ResponseEntity<?> delete(String)::120", value="Deletes the movie with the given title.")
 	@ApiResponses({
 		@ApiResponse(code=204, message="The movie was successfully deleted (or didn't exist at all)."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")
@@ -136,7 +136,7 @@ public class Neo4jMovieController {
 	}
 	
 	@PutMapping("/{where}/{set}")
-	@ApiOperation("Updates the movies that match with the comma-separated clauses in the \"where\" part of the URL, setting the comma-separated properties.")
+	@ApiOperation(notes="public ResponseEntity<?> update(String, String)::144", value="Updates the movies that match with the comma-separated clauses in the \"where\" part of the URL, setting the comma-separated properties.")
 	@ApiResponses({
 		@ApiResponse(code=200, message="The movies were successfully updated."),
 		@ApiResponse(code=500, message="An unexpected error occurred. We will work on it.")

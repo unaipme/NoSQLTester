@@ -32,6 +32,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,8 +43,12 @@ import com.unai.app.hbase.model.Column;
 import com.unai.app.hbase.model.ColumnFamily;
 import com.unai.app.hbase.model.Row;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/hbase")
+@Api
 public class HBaseRestController {
 	
 	private Configuration config = HBaseConfiguration.create();
@@ -71,6 +77,7 @@ public class HBaseRestController {
 	
 	@SuppressWarnings("deprecation")
 	@GetMapping("/tables/{table}/{rowid}")
+	@ApiOperation(notes="public ResponseEntity<?> getAll(String, String)::81", value = "Gets all columns of a row, sorted by column family.")
 	public ResponseEntity<?> getAll(@PathVariable("table") String tablename, @PathVariable("rowid") String rowid) throws IOException {
 		Table table = null;
 		try {
@@ -103,6 +110,7 @@ public class HBaseRestController {
 	
 	@SuppressWarnings("deprecation")
 	@GetMapping("/tables/{table}/{rowid}/{cf}")
+	@ApiOperation(notes="public ResponseEntity<?> getCf(String, String, String)::114", value="Gets all columns of the given column family and row.")
 	public ResponseEntity<?> getCf(@PathVariable("table") String tablename, @PathVariable("rowid") String rowid, @PathVariable("cf") String cf) throws IOException {
 		Table table = null;
 		try {
@@ -135,6 +143,7 @@ public class HBaseRestController {
 	
 	@SuppressWarnings("deprecation")
 	@GetMapping("/tables/{table}/{rowid}/{cf}/{col}")
+	@ApiOperation(notes="public ResponseEntity<?> getValue(String, String, String, String)::147", value="Gets the value of a given column, of given column family and row.")
 	public ResponseEntity<?> getValue(@PathVariable("table") String tablename, @PathVariable("rowid") String rowid, @PathVariable("cf") String cf,
 										@PathVariable("col") String col) throws IOException {
 		Table table = null;
@@ -166,6 +175,7 @@ public class HBaseRestController {
 	}
 	
 	@GetMapping("/tables")
+	@ApiOperation(notes="public ResponseEntity<?> getTables()::179", value="Lists all the tables in the server.")
 	public ResponseEntity<?> getTables() {
 		try {
 			connect();
@@ -189,6 +199,7 @@ public class HBaseRestController {
 	}
 	
 	@RequestMapping(value="/tables/{table}/{rowid}/{cf}/{col}/{value}", method={RequestMethod.POST, RequestMethod.PUT})
+	@ApiOperation(notes="public ResponseEntity<?> put(String, String, String, String, String)::202", value="Puts the value in the given table and column family's column.")
 	public ResponseEntity<?> put(@PathVariable("table") String tablename, @PathVariable("rowid") String rowid, @PathVariable("cf") String cf,
 									@PathVariable("col") String col, @PathVariable("value") String value) {
 		try {
@@ -210,6 +221,7 @@ public class HBaseRestController {
 	}
 	
 	@RequestMapping(value="/tables/{table}/{rowid}", method={RequestMethod.POST, RequestMethod.PUT})
+	@ApiOperation(notes="public ResponseEntity<?> putMany(String, String, HashMap<String, Object>)::225", value="Puts many values into the said table.")
 	public ResponseEntity<?> putMany(@PathVariable("table") String table, @PathVariable("rowid") String rowid, @RequestBody HashMap<String, Object> values) {
 		try {
 			connect();
@@ -238,7 +250,8 @@ public class HBaseRestController {
 		}
 	}
 	
-	@RequestMapping(value="/tables/{table}", method={RequestMethod.PUT, RequestMethod.POST})
+	@PostMapping(value="/tables/{table}")
+	@ApiOperation(notes="public ResponseEntity<?> createTable(String, List<String>)::255", value="Creates a table with the given column families.")
 	public ResponseEntity<?> createTable(@PathVariable("table") String tablename, @RequestBody List<String> cfs) {
 		try {
 			connect();
@@ -260,7 +273,25 @@ public class HBaseRestController {
 		}
 	}
 	
+	@PutMapping(value="/tables/{table}")
+	@ApiOperation(notes="public ResponseEntity<?> enableTable(String)::278", value="Enables the table of given name.")
+	public ResponseEntity<?> enableTable(@PathVariable String table) {
+		try {
+			connect();
+			Admin admin = conn.getAdmin();
+			admin.enableTable(TableName.valueOf(table));
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@DeleteMapping("/tables/{table}")
+	@ApiOperation(notes="public ResponseEntity<?> disableThenDeleteTable(String)::295", value="The first time, it disables the said table. The second time, it deletes the table.")
 	public ResponseEntity<?> disableThenDeleteTable(@PathVariable String table) {
 		try {
 			connect();

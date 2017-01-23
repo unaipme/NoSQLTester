@@ -14,14 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unai.app.redis.JedisDriver;
 import com.unai.app.redis.model.SetResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import redis.clients.jedis.exceptions.JedisDataException;
 
 @RestController
 @RequestMapping("/redis")
+@Api
 public class RedisSetController {
 	private Logger log = LoggerFactory.getLogger(RedisSetController.class);
 	
 	@PostMapping("/sadd/{key}/{members}")
+	@ApiOperation(notes="public ResponseEntity<?> sadd(String, String [])::29", value="Adds one or more values to the set with the given key.")
 	public ResponseEntity<?> sadd(@PathVariable("key") String key, @PathVariable("members") String [] members) {
 		JedisDriver jedis = null;
 		try {
@@ -43,6 +47,7 @@ public class RedisSetController {
 	}
 	
 	@GetMapping("/smembers/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> smembers(String)::51", value="Gets all elements in the set with the given key.")
 	public ResponseEntity<?> smembers(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
@@ -63,6 +68,7 @@ public class RedisSetController {
 	}
 	
 	@DeleteMapping("/srem/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> sremall(String)::72", value="Deletes the set with the given key and all its elements.")
 	public ResponseEntity<?> sremall(@PathVariable String key) {
 		JedisDriver jedis = null;
 		try {
@@ -80,6 +86,7 @@ public class RedisSetController {
 	}
 	
 	@DeleteMapping("/srem/{key}/{members}")
+	@ApiOperation(notes="public ResponseEntity<?> sremall(String, String[])::90", value="Deletes the said elements from the set with the given key.")
 	public ResponseEntity<?> sremall(@PathVariable("key") String key, @PathVariable("field") String [] members) {
 		JedisDriver jedis = null;
 		try {

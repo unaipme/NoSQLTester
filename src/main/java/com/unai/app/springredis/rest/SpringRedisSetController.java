@@ -20,6 +20,8 @@ import com.unai.app.redis.model.SetResponse;
 import com.unai.app.springredis.service.SetRepository;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.ApiOperation;
+
 
 
 @RestController
@@ -32,6 +34,7 @@ public class SpringRedisSetController {
 	private SetRepository setRepository;
 	
 	@PostMapping("/sadd/{key}/{members}")
+	@ApiOperation(notes="public ResponseEntity<?> sadd(String, String [])::38", value="Adds one or more values to the set with the given key.")
 	public ResponseEntity<?> sadd(@PathVariable("key") String key, @PathVariable("members") String [] members) {
 		try {
 			Long created = setRepository.sadd(key, (Object []) members);
@@ -46,6 +49,7 @@ public class SpringRedisSetController {
 	}
 	
 	@GetMapping("/smembers/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> smembers(String)::53", value="Gets all elements in the set with the given key.")
 	public ResponseEntity<?> smembers(@PathVariable String key) {
 		try {
 			SetResponse st = new SetResponse(key, setRepository.smembers(key));
@@ -60,6 +64,7 @@ public class SpringRedisSetController {
 	}
 	
 	@DeleteMapping("/srem/{key}")
+	@ApiOperation(notes="public ResponseEntity<?> sremall(String)::68", value="Deletes the set with the given key and all its elements.")
 	public ResponseEntity<?> sremall(@PathVariable String key) {
 		try {
 			setRepository.sremall(key);
@@ -71,6 +76,7 @@ public class SpringRedisSetController {
 	}
 	
 	@DeleteMapping("/srem/{key}/{members}")
+	@ApiOperation(notes="public ResponseEntity<?> srem(String, String [])::80", value="Deletes the said elements from the set with the given key.")
 	public ResponseEntity<?> srem(@PathVariable("key") String key, @PathVariable("field") String [] members) {
 		try {
 			Long count = setRepository.srem(key, (Object []) members);

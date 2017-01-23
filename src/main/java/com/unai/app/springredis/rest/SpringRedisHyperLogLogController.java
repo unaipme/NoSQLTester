@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unai.app.springredis.service.HyperLogLogRepository;
 import com.unai.app.utils.HTTPHeaders;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/sredis")
 public class SpringRedisHyperLogLogController {
@@ -29,6 +31,7 @@ public class SpringRedisHyperLogLogController {
 	private Logger log = LoggerFactory.getLogger(SpringRedisHyperLogLogController.class);
 	
 	@GetMapping("/pfcount/{key}")
+	@ApiOperation(notes="", value="Returns the approximated cardinality of the hyperloglog with the given key.")
 	public ResponseEntity<?> pfcount(@PathVariable String key) {
 		try {
 			Map<String, Long> response = new HashMap<>();
@@ -41,6 +44,7 @@ public class SpringRedisHyperLogLogController {
 	}
 	
 	@PostMapping("/pfcount/{key}/{elements}")
+	@ApiOperation(notes="", value="Adds the specified elements to the hyperloglog with the given key.")
 	public ResponseEntity<?> pfadd(@PathVariable("key") String key, @PathVariable("elements") String [] elems) {
 		try {
 			Map<String, Long> response = new HashMap<>();
@@ -54,6 +58,7 @@ public class SpringRedisHyperLogLogController {
 	}
 	
 	@PutMapping("/pfmerge/{destkey}/{sourcekey}")
+	@ApiOperation(notes="", value="Merges two hyperloglogs into one.")
 	public ResponseEntity<?> pfmerge(@PathVariable("destkey") String destKey, @PathVariable("sourcekey") String sourceKey) {
 		try {
 			hllRepository.pfmerge(destKey, sourceKey);
