@@ -35,7 +35,21 @@ Go to the [``hbase`` package readme file](src/main/java/com/unai/app/hbase/READM
 
 The Swagger Springfox documentation can be used to check that all endpoints work as expected. It's possible to use Postman to run some quick test if wanted.
 
-**NoSQLTester** is now running online in [Heroku](https://nosqltester.herokuapp.com/), from which is possible to try the endpoints via the mentioned Springfox page, or directly use them via Postman.
+#### Start everything
+
+If you have followed all the guides to install the servers, the following script will start up all servers and the app:
+
+```
+source /etc/environment
+/opt/redis/src/redis-server /opt/redis/redis.conf --daemonize yes
+/opt/mongodb/bin/mongod --dbpath /data/mongo --fork --logpath /var/log/mongod.log
+/opt/neo4j/bin/neo4j start
+/opt/hbase/bin/start-hbase.sh
+cd /opt
+git clone https://github.com/unaipme/nosqltester
+cd nosqltester
+mvn spring-boot:run
+```
 
 If you find any of this code useful or if you have any question or whatever, don't hesitate to contact me!
 
@@ -71,7 +85,21 @@ Ve al archivo [readme del paquete ``mongo`` ](src/main/java/com/unai/app/mongo/R
 
 Ve al archivo [readme del paquete ``hbase`` ](src/main/java/com/unai/app/hbase/README.md) para ver una explicación sobre cómo instalar y ejecutar HBase.
 
-Se puede usar Swagger Springfox para ver las endpoints disponibles y comprabar que funcionan. También se podría escribir algún test simple usando Postman.
+#### Iniciar todo
+
+Si has seguido las guías para instalar los servidores, el script de debajo iniciará todos los servidores y la aplicación:
+
+```
+source /etc/environment
+/opt/redis/src/redis-server /opt/redis/redis.conf --daemonize yes
+/opt/mongodb/bin/mongod --dbpath /data/mongo --fork --logpath /var/log/mongod.log
+/opt/neo4j/bin/neo4j start
+/opt/hbase/bin/start-hbase.sh
+cd /opt
+git clone https://github.com/unaipme/nosqltester
+cd nosqltester
+mvn spring-boot:run
+```
 
 **NoSQLTester** está disponible para probar en línea ahora mismo desde [Heroku](https://nosqltester.herokuapp.com/). Ahí se puede acceder a Springfox y comprobar que funciona bien, o se pueden usar las endpoints directamente desde Postman.
 
