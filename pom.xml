@@ -75,11 +75,6 @@
 		    <artifactId>guava</artifactId>
 		    <version>15.0</version>
 		</dependency>
-		<dependency>
-		    <groupId>jdk.tools</groupId>
-		    <artifactId>jdk.tools</artifactId>
-		    <version>1.6</version>
-		</dependency>
 	</dependencies>
 	
 	<repositories>
