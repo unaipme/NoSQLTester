@@ -4,6 +4,8 @@
 
 The goal of this project is to build an application with which it is possible to connect and try different NoSQL databases, and also to as a guide for other developers to learn and understand the way these databases work and how to code for them. It is built using Spring Boot framework (for the REST part and for the data access and management part with Spring Data). At release point, my plan is to have built the java part of, at least, Redis, MongoDB, Neo4j and HBase.
 
+This piece of software was built as a part of a research. You can read about the results in document [NoSQL ![PDF](http://ir.avisbudgetgroup.com/images/irIcons/ico_pdf.gif)](NoSQL.pdf).
+
 ### Using
 
 For this project to properly work, it is highly recommended to have a running instance of each of the servers. The app will still start if the connection of some dbs fail, though. Instructions on how to install the servers follow later.
@@ -56,6 +58,8 @@ If you find any of this code useful or if you have any question or whatever, don
 ## Spanish
 
 El objetivo de este proyecto es construir una aplicación mediante la cual sea posible conectarse y probar diferentes sistemas de bases de datos NoSQL. Está construido usando la framework Spring Boot (para la parte de REST, y se han usado / usarán los diferentes módulos de Spring Data para cada DBMS). Mi plan para release es haber construido las interfaces en Java de, por lo menos, los sistemas Redis, MongoDB, Neo4j y HBase.
+
+Este software fue escrito como parte de un trabajo de investigación. Puedes leer el resultado en el documento [NoSQL ![PDF](http://ir.avisbudgetgroup.com/images/irIcons/ico_pdf.gif)](NoSQL.pdf).
 
 ### Uso
 
