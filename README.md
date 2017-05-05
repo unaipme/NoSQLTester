@@ -2,7 +2,7 @@
 
 ## English
 
-The goal of this project is to build an application with which it is possible to connect and try different NoSQL databases, and also to as a guide for other developers to learn and understand the way these databases work and how to code for them. It is built using Spring Boot framework (for the REST part and for the data access and management part with Spring Data). At release point, my plan is to have built the java part of, at least, Redis, MongoDB, Neo4j and HBase.
+The goal of this project is to build an application with which it is possible to connect and try different NoSQL databases, and also to act as a guide for other developers to learn and understand the way these databases work and how to code for them. It is built using Spring Boot framework (for the REST part and for the data access and management part with Spring Data). At release point, my plan is to have built the java part of, at least, Redis, MongoDB, Neo4j and HBase.
 
 This piece of software was built as a part of a research. You can read about the results in document [NoSQL ![PDF](http://ir.avisbudgetgroup.com/images/irIcons/ico_pdf.gif)](NoSQL.pdf).
 
